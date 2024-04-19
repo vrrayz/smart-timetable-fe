@@ -1,3 +1,7 @@
+export * from './screen';
+export * from './colors';
+export * from './fonts';
+
 import styled from "styled-components";
 
 export const GRADIENT_BG = `linear-gradient(

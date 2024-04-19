@@ -1,0 +1,1 @@
+export const Poppins = '"Poppins", sans-serif'

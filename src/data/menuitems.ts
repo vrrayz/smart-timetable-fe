@@ -73,6 +73,6 @@ export const menuItems = [
   { title: "Home", isDropdown: false, link: "/", items: [] },
 //   { ...productsMenu, isDropdown: true },
 //   { ...supportMenu, isDropdown: true },
-  { title: "Login", isDropdown: false, link: "/about", items: [] },
-  { title: "Sign up", isDropdown: false, link: "/about", items: [] },
+  { title: "Login", isDropdown: false, link: "/auth/login", items: [] },
+  { title: "Sign up", isDropdown: false, link: "/auth/register", items: [] },
 ];
