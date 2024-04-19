@@ -28,9 +28,9 @@ export const Navbar = () => {
   return (
     <NavbarContainer>
       <Image
-        src={"/images/logo.webp"}
-        width={100}
-        height={47}
+        src={"/images/logo.png"}
+        width={361}
+        height={69}
         alt={"Logo"}
         className="logo"
       />
@@ -97,20 +97,20 @@ const NavbarContainer = styled.div`
     display: flex;
     justify-content: center;
     flex-flow: column;
-    margin: auto;
+    margin: auto 0;
+    margin-left: 16px;
   }
   ${SCREENS.lg} {
     display: grid;
     // justify-content: center;
-    grid-template-columns: 180px 1fr 230px;
+    grid-template-columns: 180px 1fr;
     padding: 0px 12px;
   }
   ${SCREENS.xl} {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     .logo {
       margin: 0;
-      margin-left: auto;
     }
   }
 `;
@@ -177,6 +177,7 @@ const NavbarList = styled.ul`
   grid-template-columns: repeat(${menuItems.length}, 1fr);
   text-align: center;
   font-weight: 200;
+  color: #fff;
   li {
     display: flex;
     justify-content: center;
@@ -190,7 +191,9 @@ const NavbarList = styled.ul`
     padding: 16px 0px;
   }
   ${SCREENS.lg} {
-    display: grid;
+    display: flex;
+    justify-content: end;
+    gap: 32px;
   }
   ${SCREENS.xl} {
     li a {
