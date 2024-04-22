@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Sidebar } from "./Sidebar";
 import { SCREENS } from "@/screens";
-import { menuItems } from "@/data/menuitems";
+import { dashboardMenuItems, menuItems } from "@/data/menuitems";
 
 import Image from "next/image";
 import { GRADIENT_BG } from "@/styles";
@@ -29,6 +29,10 @@ interface NavbarProps {
 
 export const Navbar = ({ isDashboardRoute }: NavbarProps) => {
   const [isNavToggled, setIsNavToggled] = useState(false);
+   const [navbarMenuItems, setNavbarMenuItems] = useState(menuItems)
+  useEffect(() => {
+    if(isDashboardRoute) setNavbarMenuItems(dashboardMenuItems)
+  },[isDashboardRoute])
   return (
     <NavbarContainer>
       <Image
@@ -56,7 +60,7 @@ export const Navbar = ({ isDashboardRoute }: NavbarProps) => {
         </MobileNavToggler>
       </ToggleMenuContainer>
       <NavbarList>
-        {menuItems.map((menuItem: MenuItem, i: React.Key) => (
+        {navbarMenuItems.map((menuItem: MenuItem, i: React.Key) => (
           <ListItem menuItem={menuItem} key={i} />
         ))}
       </NavbarList>
