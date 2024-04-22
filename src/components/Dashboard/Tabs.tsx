@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Colors, SCREENS } from "@/styles";
 import { TabItem } from "./TabItem";
 
-export type TabItems = "class" | "tasks" | "exams";
+export type TabItems = "class" | "tasks" | "exams" | "terms";
 interface Props {
   setCurrentTab: (value: TabItems) => void;
 }

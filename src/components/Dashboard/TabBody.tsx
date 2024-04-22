@@ -2,8 +2,8 @@
 
 import React from "react";
 import { TabItems } from "./Tabs";
-import styled from "styled-components";
-import Image from "next/image";
+import { NoItem } from "../NoItem";
+
 
 interface Props {
   tabItem: TabItems;
@@ -11,31 +11,7 @@ interface Props {
 
 export const TabBody = ({ tabItem }: Props) => {
   return (
-    <Container className="no-value">
-      <NoValueContainer>
-        <Image
-          src={`/images/icons/${tabItem}.png`}
-          width={100}
-          height={100}
-          alt="exam_icon"
-          className="mx-auto"
-        />
-        <h2>There are no { tabItem }</h2>
-      </NoValueContainer>
-    </Container>
+    <NoItem imgName={tabItem} itemName={tabItem} />
   );
 };
 
-export const Container = styled.div`
-  &.no-value{
-    min-height: 50vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-`;
-export const NoValueContainer = styled.div`
-  opacity: 0.3;
-  text-align: center;
-  margin: auto;
-`;

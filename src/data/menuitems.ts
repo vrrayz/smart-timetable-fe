@@ -80,6 +80,7 @@ export const menuItems = [
 export const dashboardMenuItems = [
   { title: "Home", isDropdown: false, link: "/", items: [] },
   { title: "Dashboard", isDropdown: false, link: "/dashboard", items: [] },
+  { title: "Terms", isDropdown: false, link: "/dashboard/terms", items: [] },
   { title: "Exams", isDropdown: false, link: "/dashboard/exams", items: [] },
   { title: "Tasks", isDropdown: false, link: "/dashboard/tasks", items: [] },
   { title: "Classes", isDropdown: false, link: "/dashboard/classes", items: [] },
