@@ -10,35 +10,29 @@ interface Props {
 }
 export const Tabs = ({ setCurrentTab }: Props) => {
   return (
-    <CustomContainer>
-      <div></div>
-      <TabsContainer>
-        <TabItem
-          src="/images/icons/class.png"
-          count={0}
-          title="class"
-          setCurrentTab={setCurrentTab}
-        />
-        <TabItem
-          src="/images/icons/tasks.png"
-          count={0}
-          title="tasks"
-          setCurrentTab={setCurrentTab}
-        />
-        <TabItem
-          src="/images/icons/exams.png"
-          count={0}
-          title="exams"
-          setCurrentTab={setCurrentTab}
-        />
-      </TabsContainer>
-    </CustomContainer>
+    <TabsContainer>
+      <TabItem
+        src="/images/icons/class.png"
+        count={0}
+        title="class"
+        setCurrentTab={setCurrentTab}
+      />
+      <TabItem
+        src="/images/icons/tasks.png"
+        count={0}
+        title="tasks"
+        setCurrentTab={setCurrentTab}
+      />
+      <TabItem
+        src="/images/icons/exams.png"
+        count={0}
+        title="exams"
+        setCurrentTab={setCurrentTab}
+      />
+    </TabsContainer>
   );
 };
-const CustomContainer = styled.div`
-  display: grid;
-  grid-template-rows: 80px 1fr;
-`;
+
 const TabsContainer = styled.div`
   padding: 0px 8px;
   display: grid;
