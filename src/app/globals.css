@@ -61,9 +61,3 @@ body {
   display: grid;
   grid-template-rows: 80px 1fr;
 }
-
-.react-calendar {
-  margin: auto;
-  width: 100%;
-  max-width: 1024px;
-}
