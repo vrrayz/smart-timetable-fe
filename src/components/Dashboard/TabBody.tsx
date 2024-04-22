@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import { TabItems } from "./Tabs";
 import styled from "styled-components";
@@ -24,7 +26,7 @@ export const TabBody = ({ tabItem }: Props) => {
   );
 };
 
-const Container = styled.div`
+export const Container = styled.div`
   &.no-value{
     min-height: 50vh;
     display: flex;
@@ -32,7 +34,7 @@ const Container = styled.div`
     justify-content: center;
   }
 `;
-const NoValueContainer = styled.div`
+export const NoValueContainer = styled.div`
   opacity: 0.3;
   text-align: center;
   margin: auto;
