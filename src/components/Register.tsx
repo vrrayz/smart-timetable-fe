@@ -45,7 +45,7 @@ export const Register = () => {
 
   useEffect(() => {
     if (shouldRedirect) {
-      redirect("/");
+      redirect("/dashboard");
     }
   }, [shouldRedirect]);
 

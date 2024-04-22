@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
+        <Navbar  isDashboardRoute={true} />
         <main className="dashboard-layout-container">
           <div></div>
           {children}

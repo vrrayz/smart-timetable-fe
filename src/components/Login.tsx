@@ -37,7 +37,7 @@ export const Login = () => {
 
   useEffect(() => {
     if (shouldRedirect) {
-      redirect("/")
+      redirect("/dashboard")
     }
   }, [shouldRedirect]);
 

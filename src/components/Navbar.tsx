@@ -23,7 +23,11 @@ interface ListItemProps {
   menuItem: MenuItem;
 }
 
-export const Navbar = () => {
+interface NavbarProps {
+  isDashboardRoute?: boolean;
+}
+
+export const Navbar = ({ isDashboardRoute }: NavbarProps) => {
   const [isNavToggled, setIsNavToggled] = useState(false);
   return (
     <NavbarContainer>
@@ -56,7 +60,7 @@ export const Navbar = () => {
           <ListItem menuItem={menuItem} key={i} />
         ))}
       </NavbarList>
-      <Sidebar isNavToggled={isNavToggled} />
+      <Sidebar isNavToggled={isNavToggled} isDashboardRoute={isDashboardRoute} />
     </NavbarContainer>
   );
 };
@@ -144,7 +148,7 @@ const TogglerItem = styled.div`
   width: 26px;
   height: 3px;
   background: #fff;
-//   box-shadow: 1px 0px 3px #663399;
+  //   box-shadow: 1px 0px 3px #663399;
   margin: auto;
   border-radius: 25%;
   transition: margin 200ms, transform 200ms;

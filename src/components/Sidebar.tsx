@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { SidebarItem } from "./SidebarItem";
-import { menuItems } from "@/data/menuitems";
+import { dashboardMenuItems, menuItems } from "@/data/menuitems";
 import { GRADIENT_BG } from "@/styles";
 
 interface SidebarProps {
   isNavToggled: boolean;
+  isDashboardRoute?: boolean;
 }
 
-export const Sidebar = ({ isNavToggled }: SidebarProps) => {
+export const Sidebar = ({ isNavToggled, isDashboardRoute }: SidebarProps) => {
+  const [sidebarMenuItems, setSidebarMenuItems] = useState(menuItems)
+  useEffect(() => {
+    if(isDashboardRoute) setSidebarMenuItems(dashboardMenuItems)
+  },[isDashboardRoute])
   return (
     <SidebarContainer
       className={`${isNavToggled && "transformed"}`}
@@ -18,7 +23,7 @@ export const Sidebar = ({ isNavToggled }: SidebarProps) => {
         <div></div>
         <div>
           <ul className="sidebar-list">
-            {menuItems.map((menuItem, i) => (
+            {sidebarMenuItems.map((menuItem, i) => (
               <SidebarItem key={i}>
                 <a href={menuItem.link}>{menuItem.title}</a>
               </SidebarItem>
@@ -44,7 +49,7 @@ const MainSidebar = styled.div`
   padding-right: 24px;
   color: #fff;
   .sidebar-list {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
     font-weight: 500;
     font-size: 1rem;
     letter-spacing: 1.5px;
