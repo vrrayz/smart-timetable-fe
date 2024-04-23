@@ -1,6 +1,6 @@
 "use server";
 
-import { getData } from "./apiRequest";
+import { getData, postData } from "./apiRequest";
 
 export const getTerms = async () => {
   const request = await getData("/term/userTerms");
@@ -9,3 +9,12 @@ export const getTerms = async () => {
   }
   return request;
 };
+
+export const addTerm = async (data = {}) => {
+  const request = await postData("/term/create", data);
+
+  return {
+    statusCode: request.statusCode,
+    message: request.message,
+  };
+}

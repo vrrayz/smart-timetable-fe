@@ -11,5 +11,5 @@ export const useTermsHook = () => {
     });
   }, []);
 
-  return { terms }
+  return { terms, setTerms }
 };

@@ -5,5 +5,6 @@ export const Colors = {
   white: "#fff",
   whitesmoke: "#f2f2f2",
   teal: "#01aa5f",
-  darkslategray: "#4f4f4f"
+  darkslategray: "#4f4f4f",
+  black: "#000"
 };
