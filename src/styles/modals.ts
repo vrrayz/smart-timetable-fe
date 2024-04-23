@@ -11,6 +11,8 @@ export const ModalOverlay = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  top:0;
+  left:0;
 `;
 export const Modal = styled.div`
   background: #fff;

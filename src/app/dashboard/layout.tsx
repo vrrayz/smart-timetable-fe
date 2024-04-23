@@ -21,7 +21,7 @@ export default function RootLayout({
         <Navbar  isDashboardRoute={true} />
         <main className="dashboard-layout-container">
           <div></div>
-          {children}
+          <div>{children}</div>
         </main>
       </body>
     </html>

@@ -6,5 +6,6 @@ export const Colors = {
   whitesmoke: "#f2f2f2",
   teal: "#01aa5f",
   darkslategray: "#4f4f4f",
-  black: "#000"
+  black: "#000",
+  blue: "#0A18CB"
 };

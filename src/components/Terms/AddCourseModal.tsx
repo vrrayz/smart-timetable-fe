@@ -7,29 +7,29 @@ import {
 } from "@/styles";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { MouseEvent, useState } from "react";
+import React, { useState } from "react";
 import { ErrorMessage, Input, Label } from "../Form";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { addTerm } from "@/actions/terms";
 import { Term } from "@/types";
 import { ErrorModal } from "../ErrorModal";
+import { addCourse } from "@/actions/courses";
 
-type TermFormInputs = {
+type CourseFormInputs = {
+  termId: number;
   title: string;
-  startDate: string;
-  endDate: string;
+  courseCode: string;
 };
 interface Props {
   setShowModal: (value: boolean) => void;
-  terms: Term[];
-  setTerms: (value: Term[]) => void;
+  term: Term;
+  // setTerms: (value: Term[]) => void;
 }
-export const AddTermsModal = ({ setShowModal, terms, setTerms }: Props) => {
+export const AddCourseModal = ({ setShowModal, term /*,setTerms*/ }: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TermFormInputs>();
+  } = useForm<CourseFormInputs>();
 
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
 
@@ -37,13 +37,14 @@ export const AddTermsModal = ({ setShowModal, terms, setTerms }: Props) => {
     if (event.target.id === "modal-overlay") setShowModal(false);
   };
 
-  const onSubmit: SubmitHandler<TermFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<CourseFormInputs> = (data) => {
     console.log("The data passed is ", data);
-    addTerm(data).then(async (res) => {
+    addCourse(data).then(async (res) => {
       if (res.statusCode !== 200) setShowErrorModal(true);
       else {
-        const newTerms = [{ ...res.message, courses: [] } as Term, ...terms];
-        setTerms(newTerms);
+        console.log(res.message)
+        // const newTerms = [{ ...res.message, courses: [] } as Term, ...terms];
+        // setTerms(newTerms);
         setShowModal(false);
       }
     });
@@ -51,15 +52,26 @@ export const AddTermsModal = ({ setShowModal, terms, setTerms }: Props) => {
   return (
     <ModalOverlay onClick={(event) => closeModal(event)} id="modal-overlay">
       {showErrorModal ? (
-        <ErrorModal title={"Error Creating Term"} setShowModal={setShowModal} />
+        <ErrorModal
+          title={"Error Creating Course"}
+          setShowModal={setShowModal}
+        />
       ) : (
         <Modal>
-          <ModalHeading>Add New Term</ModalHeading>
+          <ModalHeading>Add New Course</ModalHeading>
           <CloseButton onClick={() => setShowModal(false)}>
             <FontAwesomeIcon icon={faXmark} size="lg" />
           </CloseButton>
           <ModalBody>
             <form onSubmit={handleSubmit(onSubmit)}>
+              <Input
+                type="hidden"
+                {...register("termId", { required: true })}
+                value={term.id}
+                className={`${errors.title ? "mb-0" : "mb-4"}`}
+              />
+              <Label htmlFor="term">Term</Label>
+              <Input type="text" value={term.title} disabled />
               <Label htmlFor="title">Title</Label>
               <Input
                 type="text"
@@ -68,29 +80,19 @@ export const AddTermsModal = ({ setShowModal, terms, setTerms }: Props) => {
               />
               {errors.title && <ErrorMessage>Title is required</ErrorMessage>}
 
-              <Label htmlFor="startDate">Start Date</Label>
+              <Label htmlFor="courseCode">Course Code</Label>
               <Input
-                type="date"
-                {...register("startDate", { required: true })}
-                className={`${errors.startDate ? "mb-0" : "mb-4"}`}
+                type="text"
+                {...register("courseCode", { required: true })}
+                className={`${errors.courseCode ? "mb-0" : "mb-4"}`}
               />
-              {errors.startDate && (
-                <ErrorMessage>Start Date is required</ErrorMessage>
-              )}
-
-              <Label htmlFor="endDate">End Date</Label>
-              <Input
-                type="date"
-                {...register("endDate", { required: true })}
-                className={`${errors.endDate ? "mb-0" : "mb-4"}`}
-              />
-              {errors.endDate && (
-                <ErrorMessage>End Date is required</ErrorMessage>
+              {errors.courseCode && (
+                <ErrorMessage>Course code is required</ErrorMessage>
               )}
 
               <Input
                 type="submit"
-                value="Add Term"
+                value="Add Course"
                 className="btn-primary mb-4"
               />
             </form>

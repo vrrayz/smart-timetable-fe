@@ -43,4 +43,14 @@ export const Button = styled.button`
     background: ${Colors.saddlebrown};
     border-color: ${Colors.saddlebrown};
   }
+  &.btn-secondary {
+    background: ${Colors.blue};
+    color: ${Colors.white};
+    border-color: ${Colors.blue};
+  }
+  &.btn-secondary.active,
+  &.btn-secondary:hover {
+    background: ${Colors.saddlebrown};
+    border-color: ${Colors.saddlebrown};
+  }
 `;

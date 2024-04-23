@@ -6,6 +6,8 @@ import { NoItem } from "../NoItem";
 import styled from "styled-components";
 import { Button, Colors } from "@/styles";
 import { AddTermsModal } from "./AddTermsModal";
+import { AddCourse } from "./AddCourse";
+import { Term } from "@/types";
 
 export const Terms = () => {
   const { terms, setTerms } = useTermsHook();
@@ -29,7 +31,10 @@ export const Terms = () => {
                   {new Date(term.endDate).toDateString()}
                 </span>
               </div>
-              <span className="my-auto">{term.courses.length} Courses</span>
+              <div className="my-auto flex flex-col">
+              <span className="">{term.courses.length} Courses</span>
+              <AddCourse term={term} />
+              </div>
             </TermsListItem>
           ))}
         </>
