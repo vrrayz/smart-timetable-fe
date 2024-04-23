@@ -12,6 +12,7 @@ import { ErrorMessage, Input, Label } from "../Form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { addTerm } from "@/actions/terms";
 import { Term } from "@/types";
+import { ErrorModal } from "../ErrorModal";
 
 type LoginFormInputs = {
   title: string;
@@ -41,29 +42,16 @@ export const AddTermsModal = ({ setShowModal, terms, setTerms }: Props) => {
     addTerm(data).then(async (res) => {
       if (res.statusCode !== 200) setShowErrorModal(true);
       else {
-        const newTerms = [{...res.message, courses: []} as Term, ...terms];
+        const newTerms = [{ ...res.message, courses: [] } as Term, ...terms];
         setTerms(newTerms);
         setShowModal(false);
       }
     });
-    // login(data).then(async (res) => {
-    //   setExtraError(res.statusCode !== 200 ? "Incorrect Credentials" : "");
-    //   if (res.statusCode === 200) setShouldRedirect(true);
-    // });
   };
   return (
     <ModalOverlay onClick={(event) => closeModal(event)} id="modal-overlay">
       {showErrorModal ? (
-        <Modal>
-          <ModalHeading>Error Creating Term</ModalHeading>
-          <CloseButton onClick={() => setShowModal(false)}>
-            <FontAwesomeIcon icon={faXmark} size="lg" />
-          </CloseButton>
-          <ModalBody className="text-center">
-            <FontAwesomeIcon icon={faXmark} size="3x" color="red" />
-            <p>An error occured while performing this action</p>
-          </ModalBody>
-        </Modal>
+        <ErrorModal title={"Error Creating Term"} setShowModal={setShowModal} />
       ) : (
         <Modal>
           <ModalHeading>Add New Term</ModalHeading>
