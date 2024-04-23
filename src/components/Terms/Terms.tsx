@@ -33,7 +33,7 @@ export const Terms = () => {
               </div>
               <div className="my-auto flex flex-col">
               <span className="">{term.courses.length} Courses</span>
-              <AddCourse term={term} />
+              <AddCourse currentTerm={term} setTerms={setTerms} terms={terms} index={i} />
               </div>
             </TermsListItem>
           ))}

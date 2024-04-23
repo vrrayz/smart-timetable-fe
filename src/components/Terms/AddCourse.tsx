@@ -4,11 +4,13 @@ import { AddCourseModal } from "./AddCourseModal";
 import { Term } from "@/types";
 
 interface Props {
-  term: Term;
-  setTerms?: (value: Term[]) => void;
+  currentTerm: Term;
+  terms: Term[];
+  setTerms: (value: Term[]) => void;
+  index: number
 }
 
-export const AddCourse = ({ term, setTerms }: Props) => {
+export const AddCourse = ({ currentTerm, terms, setTerms, index }: Props) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   return (
     <>
@@ -21,8 +23,10 @@ export const AddCourse = ({ term, setTerms }: Props) => {
       {showModal && (
         <AddCourseModal
           setShowModal={setShowModal}
-          term={term}
-          //   setTerms={setTerms}
+          currentTerm={currentTerm}
+          setTerms={setTerms}
+          terms={terms}
+          index={index}
         />
       )}
     </>

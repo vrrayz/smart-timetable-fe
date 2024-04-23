@@ -8,6 +8,8 @@ export interface Term {
 
 export interface Course {
   id: number;
+  termId: number;
+  userId: number;
   title: string;
   courseCode: string;
 }

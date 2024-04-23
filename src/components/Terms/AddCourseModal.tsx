@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { ErrorMessage, Input, Label } from "../Form";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Term } from "@/types";
+import { Course, Term } from "@/types";
 import { ErrorModal } from "../ErrorModal";
 import { addCourse } from "@/actions/courses";
 
@@ -21,10 +21,18 @@ type CourseFormInputs = {
 };
 interface Props {
   setShowModal: (value: boolean) => void;
-  term: Term;
-  // setTerms: (value: Term[]) => void;
+  currentTerm: Term;
+  setTerms: (value: Term[]) => void;
+  terms: Term[];
+  index: number;
 }
-export const AddCourseModal = ({ setShowModal, term /*,setTerms*/ }: Props) => {
+export const AddCourseModal = ({
+  setShowModal,
+  currentTerm,
+  setTerms,
+  index,
+  terms,
+}: Props) => {
   const {
     register,
     handleSubmit,
@@ -42,9 +50,11 @@ export const AddCourseModal = ({ setShowModal, term /*,setTerms*/ }: Props) => {
     addCourse(data).then(async (res) => {
       if (res.statusCode !== 200) setShowErrorModal(true);
       else {
-        console.log(res.message)
+        console.log(res.message);
+        const prevTerms = [...terms];
+        prevTerms[index].courses.push(res.message as Course);
         // const newTerms = [{ ...res.message, courses: [] } as Term, ...terms];
-        // setTerms(newTerms);
+        setTerms(prevTerms);
         setShowModal(false);
       }
     });
@@ -67,11 +77,11 @@ export const AddCourseModal = ({ setShowModal, term /*,setTerms*/ }: Props) => {
               <Input
                 type="hidden"
                 {...register("termId", { required: true })}
-                value={term.id}
+                value={currentTerm.id}
                 className={`${errors.title ? "mb-0" : "mb-4"}`}
               />
               <Label htmlFor="term">Term</Label>
-              <Input type="text" value={term.title} disabled />
+              <Input type="text" value={currentTerm.title} disabled />
               <Label htmlFor="title">Title</Label>
               <Input
                 type="text"
