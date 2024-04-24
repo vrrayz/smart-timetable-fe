@@ -13,3 +13,12 @@ export interface Course {
   title: string;
   courseCode: string;
 }
+
+export interface StudyPreferenceInterface {
+  id: number;
+  userId: number;
+  startTime: number;
+  endTime: number;
+  coursesPerDay: number;
+  breaksPerDay: number;
+}

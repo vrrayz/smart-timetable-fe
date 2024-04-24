@@ -54,3 +54,11 @@ export const Button = styled.button`
     border-color: ${Colors.saddlebrown};
   }
 `;
+export const ListItem = styled.div`
+  padding: 16px 0px;
+  display: flex;
+  justify-content: space-around;
+  border: 1px solid ${Colors.darkslategray}29;
+  border-left: none;
+  border-right: none;
+`;

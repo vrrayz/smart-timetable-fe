@@ -2,9 +2,9 @@
 
 import { cookies } from "next/headers";
 
-export async function postData(url = "", data = {}) {
+export async function postData(url = "", data = {}, method = "POST") {
   const response = await fetch(`${process.env.BE_API_URL}${url}`, {
-    method: "POST",
+    method: method,
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       Authorization: `Bearer ${cookies().get("access_token")?.value}`,

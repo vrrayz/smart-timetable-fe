@@ -21,7 +21,7 @@ export default function RootLayout({
         <Navbar  isDashboardRoute={true} />
         <main className="dashboard-layout-container">
           <div></div>
-          <div>{children}</div>
+          <div className="max-w-6xl mx-auto" style={{width: '100%'}}>{children}</div>
         </main>
       </body>
     </html>
