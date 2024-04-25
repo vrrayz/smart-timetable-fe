@@ -36,12 +36,14 @@ export const StudyPreference = () => {
   });
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const {
+    getValues,
     setValue,
-    setError,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<StudyPreferenceInput>();
+  } = useForm<StudyPreferenceInput>({
+    reValidateMode: "onSubmit",
+  });
 
   const setTimeValues = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -55,14 +57,7 @@ export const StudyPreference = () => {
   };
 
   const onSubmit: SubmitHandler<StudyPreferenceInput> = (data) => {
-    console.log(data.breaksPerDay);
-    // validation rules
-    if (data.coursesPerDay === 0) {
-      setError("coursesPerDay", {
-        type: "custom",
-        message: "Value must be greater than 0",
-      });
-    }
+    // =====================================================
     if (studyPreference === undefined || studyPreference === null) {
       createStudyPreference(data).then(async (res) => {
         if (res.statusCode !== 200) setShowErrorModal(true);
@@ -74,7 +69,6 @@ export const StudyPreference = () => {
       updateStudyPreference(data, studyPreference.id).then(async (res) => {
         if (res.statusCode !== 200) setShowErrorModal(true);
         else {
-          console.log("The data returned is ", res.message);
           setStudyPreference(res.message as StudyPreferenceInterface);
         }
       });
@@ -95,7 +89,7 @@ export const StudyPreference = () => {
       setValue("startTime", 0);
       setValue("endTime", 0);
       setValue("breaksPerDay", 0);
-      setValue("coursesPerDay", 0);
+      setValue("coursesPerDay", 10);
     }
   }, [setValue, studyPreference]);
   return (
@@ -111,7 +105,7 @@ export const StudyPreference = () => {
           <div>
             <h1 className="my-auto">Preferred Study Start Time</h1>
           </div>
-          <div className="my-auto">
+          <div className="my-auto max-w-32">
             <Input
               type="time"
               onChange={(event) => setTimeValues(event, "startTime")}
@@ -124,24 +118,38 @@ export const StudyPreference = () => {
           <div>
             <h1 className="my-auto">Preferred Study Stop Time</h1>
           </div>
-          <div className="my-auto">
+          <div className="my-auto w-32">
             <Input
               type="time"
               onChange={(event) => setTimeValues(event, "endTime")}
               value={timeFields.endTime}
               required
             />
+            <Input
+              type="hidden"
+              {...register("endTime", {
+                validate: (value) =>
+                  value > getValues("startTime") ||
+                  "The study stop time must be greater than the study start timef",
+              })}
+            />
+            {errors.endTime && (
+              <ErrorMessage>{errors.endTime.message}</ErrorMessage>
+            )}
           </div>
         </CustomListItem>
         <CustomListItem>
           <div>
             <h1 className="my-auto">Preferred Courses Per Day</h1>
           </div>
-          <div className="my-auto max-w-28">
+          <div className="my-auto max-w-32">
             <Input
               type="number"
               className=""
-              {...register("coursesPerDay", { required: "Field is required" })}
+              {...register("coursesPerDay", {
+                required: "Field is required",
+                min: { value: 1, message: "Value must be greater than 0" },
+              })}
             />
             {errors.coursesPerDay && (
               <ErrorMessage>{errors.coursesPerDay.message}</ErrorMessage>
@@ -154,11 +162,14 @@ export const StudyPreference = () => {
               Percentage study time allocated to breaks
             </h1>
           </div>
-          <div className="my-auto max-w-28">
+          <div className="my-auto max-w-32">
             <Input
               type="number"
               className=""
-              {...register("breaksPerDay", { required: "Field is required" })}
+              {...register("breaksPerDay", {
+                required: "Field is required",
+                min: { value: 10, message: "Minimum value is 10%" },
+              })}
             />
             {errors.breaksPerDay && (
               <ErrorMessage>{errors.breaksPerDay.message}</ErrorMessage>
