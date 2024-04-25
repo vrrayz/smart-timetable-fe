@@ -8,12 +8,33 @@ import { Button, Colors, ListItem } from "@/styles";
 import { AddTermsModal } from "./AddTermsModal";
 import { AddCourse } from "./AddCourse";
 import { Term } from "@/types";
+import { useCurrentTermsHook } from "./hooks/useCurrentTermHook";
+import { updateCurrentTerm } from "@/actions/terms";
+import { ErrorModal } from "../ErrorModal";
 
 export const Terms = () => {
   const { terms, setTerms } = useTermsHook();
+  const { currentTerm, setCurrentTerm } = useCurrentTermsHook();
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+  const changeCurrentTerm = (termId: number) => {
+    updateCurrentTerm(termId).then(async (res) => {
+      console.log("The anykind of response here ", res.message);
+      if (res.statusCode !== 200) setShowErrorModal(true);
+      else {
+        console.log("The successful response here ", res.message);
+        setCurrentTerm({ termId });
+      }
+    });
+  };
   return (
     <>
+      {showErrorModal && (
+        <ErrorModal
+          title={"Current Term Update Error"}
+          setShowModal={setShowErrorModal}
+        />
+      )}
       <div className="text-center flex place-content-around mb-4">
         <span className="text-2xl font-bold ">Terms</span>
         <Button className="btn btn-primary" onClick={() => setShowModal(true)}>
@@ -30,10 +51,25 @@ export const Terms = () => {
                   {new Date(term.startDate).toDateString()} -{" "}
                   {new Date(term.endDate).toDateString()}
                 </span>
+                {currentTerm && currentTerm.termId === term.id ? (
+                  <span className="text-sm block text-teal">Current Term</span>
+                ) : (
+                  <Button
+                    className="btn btn-primary text-sm block"
+                    onClick={() => changeCurrentTerm(term.id)}
+                  >
+                    Set Current Term
+                  </Button>
+                )}
               </div>
               <div className="my-auto flex flex-col">
-              <span className="">{term.courses.length} Courses</span>
-              <AddCourse currentTerm={term} setTerms={setTerms} terms={terms} index={i} />
+                <span className="">{term.courses.length} Courses</span>
+                <AddCourse
+                  currentTerm={term}
+                  setTerms={setTerms}
+                  terms={terms}
+                  index={i}
+                />
               </div>
             </ListItem>
           ))}

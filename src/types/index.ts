@@ -5,7 +5,9 @@ export interface Term {
   endDate: Date;
   courses: Course[];
 }
-
+export interface CurrentTerm {
+  termId: number;
+}
 export interface Course {
   id: number;
   termId: number;
