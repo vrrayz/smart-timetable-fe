@@ -1,4 +1,4 @@
-import { addClasses, editClasses } from "@/actions/classes";
+import { editClasses } from "@/actions/classes";
 import {
   ModalOverlay,
   Modal,
@@ -93,7 +93,6 @@ export const EditClassModal = ({
     currentSelectedClass.schedule[0].days.indexOf(value) !== -1;
 
   const onSubmit: SubmitHandler<ClassesFormInputs> = (data) => {
-    console.log("The data passed is ", data);
     const actualSchedule = data.schedule.map(({ startDate, ...item }) => {
       return {
         ...item,
@@ -117,9 +116,7 @@ export const EditClassModal = ({
       repeat: shouldRepeat,
       schedule: actualSchedule,
     };
-    console.log("The actual data that works ", actualFormData);
     editClasses(actualFormData, currentSelectedClass.id).then(async (res) => {
-      console.log("Result is here ", res);
       if (res.statusCode !== 200) setShowErrorModal(true);
       else {
         setIsFormActionSuccessful(true);
