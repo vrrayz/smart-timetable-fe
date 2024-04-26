@@ -19,10 +19,8 @@ export const Terms = () => {
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const changeCurrentTerm = (termId: number) => {
     updateCurrentTerm(termId).then(async (res) => {
-      console.log("The anykind of response here ", res.message);
       if (res.statusCode !== 200) setShowErrorModal(true);
       else {
-        console.log("The successful response here ", res.message);
         setCurrentTerm({ termId });
       }
     });

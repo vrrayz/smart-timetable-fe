@@ -2,14 +2,21 @@
 
 import { cookies } from "next/headers";
 
-export async function postData(url = "", data = {}, method = "POST") {
+const defaultContentType = "application/x-www-form-urlencoded";
+
+export async function postData(
+  url = "",
+  data = {},
+  method = "POST",
+  contentType = defaultContentType
+) {
   const response = await fetch(`${process.env.BE_API_URL}${url}`, {
     method: method,
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      "Content-Type": contentType,
       Authorization: `Bearer ${cookies().get("access_token")?.value}`,
     },
-    body: new URLSearchParams(data),
+    body: contentType === "application/json" ? JSON.stringify(data) : new URLSearchParams(data),
   });
   return response.json(); // parses JSON response into native JavaScript objects
 }

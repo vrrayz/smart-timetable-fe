@@ -49,6 +49,13 @@ export const Input = styled.input`
     border-color: ${Colors.saddlebrown};
   }
 `;
+export const Select = styled.select`
+border: 1px solid #717171;
+  padding: 6px 8px;
+  width: 100%;
+  border-radius: 3px;
+  font-family: ${Poppins};
+`
 export const Label = styled.label`
   font-family: ${Poppins};
 `;

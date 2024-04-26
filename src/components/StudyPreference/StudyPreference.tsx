@@ -10,7 +10,7 @@ import {
   createStudyPreference,
   updateStudyPreference,
 } from "@/actions/studyPreference";
-import { StudyPreferenceInterface } from "@/types";
+import { StudyPreferenceInterface, TimeFieldsInput } from "@/types";
 import { ErrorModal } from "../ErrorModal";
 import { millisecondsToTime, timeToMilliseconds } from "@/helpers";
 
@@ -19,11 +19,6 @@ type StudyPreferenceInput = {
   endTime: number;
   coursesPerDay: number;
   breaksPerDay: number;
-};
-
-type TimeFieldsInput = {
-  startTime: string;
-  endTime: string;
 };
 
 type FormNames = "startTime" | "endTime";
