@@ -22,3 +22,16 @@ export const addClasses = async (data = {}) => {
     message: request.message,
   };
 };
+
+export const editClasses = async (data = {}, classId: number) => {
+  const request = await postData(
+    "/classes/edit/"+classId,
+    data,
+    "PATCH",
+    "application/json"
+  );
+  return {
+    statusCode: request.statusCode,
+    message: request.message,
+  };
+};

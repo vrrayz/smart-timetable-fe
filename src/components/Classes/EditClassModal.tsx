@@ -1,4 +1,4 @@
-import { addClasses } from "@/actions/classes";
+import { addClasses, editClasses } from "@/actions/classes";
 import {
   ModalOverlay,
   Modal,
@@ -6,7 +6,7 @@ import {
   CloseButton,
   ModalBody,
 } from "@/styles";
-import { Classes, ScheduleInputs, TimeFieldsInput } from "@/types";
+import { Classes, ScheduleInputsWithId, TimeFieldsInput } from "@/types";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -15,7 +15,8 @@ import { ErrorModal } from "../ErrorModal";
 import { Label, ErrorMessage, Input, Select } from "../Form";
 import { useCoursesHook } from "@/hooks/useCoursesHook";
 import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
-import { timeToMilliseconds } from "@/helpers";
+import { millisecondsToTime, timeToMilliseconds } from "@/helpers";
+import { redirect } from "next/navigation";
 
 type ClassesFormInputs = {
   courseId: number;
@@ -24,30 +25,52 @@ type ClassesFormInputs = {
   building?: string;
   lecturer?: string;
   repeat: number;
-  schedule: ScheduleInputs[];
+  schedule: ScheduleInputsWithId[];
 };
 
 interface Props {
   setShowModal: (value: boolean) => void;
-  classes: Classes[];
-  setClasses: (value: Classes[]) => void;
+  currentSelectedClass: Classes;
 }
 type FormNames = "startTime" | "endTime";
-export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
+export const EditClassModal = ({
+  setShowModal,
+  currentSelectedClass,
+}: Props) => {
   const {
     register,
     setValue,
     handleSubmit,
     formState: { errors },
-  } = useForm<ClassesFormInputs>();
+  } = useForm<ClassesFormInputs>({
+    defaultValues: {
+      ...(currentSelectedClass as unknown as ClassesFormInputs),
+      schedule: [
+        {
+          startDate: new Date(currentSelectedClass.schedule[0].startDate)
+            .toISOString()
+            .split("T")[0],
+          endDate: new Date(currentSelectedClass.schedule[0].endDate)
+            .toISOString()
+            .split("T")[0],
+          startTime: currentSelectedClass.schedule[0].startTime,
+          endTime: currentSelectedClass.schedule[0].endTime,
+        },
+      ],
+    },
+  });
 
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
-  const [shouldRepeat, setShouldRepeat] = useState<boolean>(false);
+  const [shouldRepeat, setShouldRepeat] = useState<boolean>(
+    currentSelectedClass.repeat
+  );
+  const [isFormActionSuccessful, setIsFormActionSuccessful] =
+    useState<boolean>(false);
   const { courses, setCourses } = useCoursesHook();
   const { currentTerm } = useCurrentTermsHook();
   const [timeFields, setTimeFields] = useState<TimeFieldsInput>({
-    startTime: "00:00",
-    endTime: "00:00",
+    startTime: millisecondsToTime(currentSelectedClass.schedule[0].startTime),
+    endTime: millisecondsToTime(currentSelectedClass.schedule[0].endTime),
   });
 
   const closeModal = (event: any) => {
@@ -66,15 +89,19 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
     });
   };
 
+  const isChecked = (value: string) =>
+    currentSelectedClass.schedule[0].days.indexOf(value) !== -1;
+
   const onSubmit: SubmitHandler<ClassesFormInputs> = (data) => {
     console.log("The data passed is ", data);
     const actualSchedule = data.schedule.map(({ startDate, ...item }) => {
       return {
         ...item,
+        id: currentSelectedClass.schedule[0].id,
         startTime: item.startTime || 0,
         endTime: item.endTime || 0,
         startDate,
-        endDate: item.endDate || startDate,
+        endDate: data.repeat ? item.endDate : startDate,
         days:
           item.days?.length > 0
             ? item.days.join(",")
@@ -90,11 +117,12 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
       repeat: shouldRepeat,
       schedule: actualSchedule,
     };
-    addClasses(actualFormData).then(async (res) => {
+    console.log("The actual data that works ", actualFormData);
+    editClasses(actualFormData, currentSelectedClass.id).then(async (res) => {
+      console.log("Result is here ", res);
       if (res.statusCode !== 200) setShowErrorModal(true);
       else {
-        setClasses([...classes, res.message]);
-        setShowModal(false);
+        setIsFormActionSuccessful(true);
       }
     });
   };
@@ -105,13 +133,18 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
       );
     }
   }, [currentTerm]);
+
+  useEffect(() => {
+    if (isFormActionSuccessful) redirect("/dashboard/classes");
+  }, [isFormActionSuccessful]);
+
   return (
     <ModalOverlay onClick={(event) => closeModal(event)} id="modal-overlay">
       {showErrorModal ? (
         <ErrorModal title={"Error Creating Term"} setShowModal={setShowModal} />
       ) : (
         <Modal>
-          <ModalHeading>Add New Class</ModalHeading>
+          <ModalHeading>Edit Class</ModalHeading>
           <CloseButton onClick={() => setShowModal(false)}>
             <FontAwesomeIcon icon={faXmark} size="lg" />
           </CloseButton>
@@ -123,9 +156,14 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
                   required: "Please select a course",
                 })}
                 className="mb-2"
+                defaultValue={currentSelectedClass.courseId}
               >
                 {courses?.map((course) => (
-                  <option value={course.id} key={course.id}>
+                  <option
+                    value={course.id}
+                    key={course.id}
+                    selected={currentSelectedClass.courseId === course.id}
+                  >
                     {course.title}
                   </option>
                 ))}
@@ -135,6 +173,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
                 type="text"
                 {...register("room")}
                 className={`${errors.room ? "mb-0" : "mb-2"}`}
+                // value={currentSelectedClass.room}
               />
               <Label htmlFor="building">Building</Label>
               <Input
@@ -177,6 +216,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
+                        checked={isChecked("Sunday")}
                         value={"Sunday"}
                       />
                       <span className="my-auto ml-1 mr-2">S</span>
@@ -187,6 +227,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
+                        checked={isChecked("Monday")}
                         value={"Monday"}
                       />
                       <span className="my-auto ml-1 mr-2">M</span>
@@ -197,6 +238,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
+                        checked={isChecked("Tuesday")}
                         value={"Tuesday"}
                       />
                       <span className="my-auto ml-1 mr-2">T</span>
@@ -207,6 +249,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
+                        checked={isChecked("Wednesday")}
                         value={"Wednesday"}
                       />
                       <span className="my-auto ml-1 mr-2">W</span>
@@ -217,6 +260,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
+                        checked={isChecked("Thursday")}
                         value={"Thursday"}
                       />
                       <span className="my-auto ml-1 mr-2">T</span>
@@ -227,6 +271,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
+                        checked={isChecked("Friday")}
                         value={"Friday"}
                       />
                       <span className="my-auto ml-1 mr-2">F</span>
@@ -237,6 +282,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
+                        checked={isChecked("Saturday")}
                         value={"Saturday"}
                       />
                       <span className="my-auto ml-1 mr-2">S</span>
@@ -298,7 +344,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
               )}
               <Input
                 type="submit"
-                value="Add Class"
+                value="Update Class Details"
                 className="btn-primary mb-2"
               />
             </form>

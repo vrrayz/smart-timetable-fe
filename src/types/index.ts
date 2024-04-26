@@ -30,12 +30,12 @@ export interface Classes {
   userId: number;
   courseId: number;
   termId: number;
-  room: string | null;
-  building: string | null;
-  lecturer: string | null;
+  room?: string;
+  building?: string;
+  lecturer?: string;
   repeat: boolean;
   schedule: Schedule[];
-  Course: Course
+  Course: Course;
 }
 
 export interface Schedule {
@@ -49,6 +49,14 @@ export interface Schedule {
   startTime: number;
   endTime: number;
 }
+export type ScheduleInputs = {
+  days: string[];
+  startDate: string;
+  endDate: string;
+  startTime: number;
+  endTime: number;
+};
+export type ScheduleInputsWithId = ScheduleInputs & { id: number };
 export type TimeFieldsInput = {
   startTime: string;
   endTime: string;
