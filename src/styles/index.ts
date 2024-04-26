@@ -53,6 +53,16 @@ export const Button = styled.button`
     background: ${Colors.saddlebrown};
     border-color: ${Colors.saddlebrown};
   }
+  &.btn-danger {
+    background: ${Colors.red};
+    color: ${Colors.white};
+    border-color: ${Colors.red};
+  }
+  &.btn-danger.active,
+  &.btn-danger:hover {
+    background: ${Colors.saddlebrown};
+    border-color: ${Colors.saddlebrown};
+  }
 `;
 export const ListItem = styled.div`
   padding: 16px 0px;

@@ -15,12 +15,12 @@ interface Props {
   setShowModal: (value: boolean) => void;
 }
 
+export const closeModal = (event: any, setShowModal: (value: boolean) => void) => {
+  if (event.target.id === "modal-overlay") setShowModal(false);
+};
 export const ErrorModal = ({ title, message, setShowModal }: Props) => {
-  const closeModal = (event: any) => {
-    if (event.target.id === "modal-overlay") setShowModal(false);
-  };
   return (
-    <ModalOverlay onClick={(event) => closeModal(event)} id="modal-overlay">
+    <ModalOverlay onClick={(event) => closeModal(event,setShowModal)} id="modal-overlay">
       <Modal>
         <ModalHeading>{title}</ModalHeading>
         <CloseButton onClick={() => setShowModal(false)}>

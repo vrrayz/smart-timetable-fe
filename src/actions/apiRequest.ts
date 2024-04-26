@@ -31,3 +31,13 @@ export async function getData(url = "") {
   });
   return response.json(); // parses JSON response into native JavaScript objects
 }
+
+export async function deleteData(url = "") {
+  const response = await fetch(`${process.env.BE_API_URL}${url}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${cookies().get("access_token")?.value}`,
+    },
+  });
+  return response.json(); // parses JSON response into native JavaScript objects
+}

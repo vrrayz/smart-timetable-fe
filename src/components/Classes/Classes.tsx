@@ -8,20 +8,25 @@ import { millisecondsToStandardTime } from "@/helpers";
 import { NoItem } from "../NoItem";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import { faDeleteLeft, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { EditClassModal } from "./EditClassModal";
 import { Classes as ClassType } from "@/types";
+import { DeleteClassModal } from "./DeleteClassModal";
 
 export const Classes = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const { classes, setClasses } = useClassesHook();
   const [currentSelectedClass, setCurrentSelectedClass] = useState<ClassType>();
-  const [currentSelectedIndex, setCurrentSelectedIndex] = useState<number>(0);
 
   const displayEditModal = (classes: ClassType) => {
     setCurrentSelectedClass(classes);
     setShowEditModal(true);
+  };
+  const displayDeleteModal = (classes: ClassType) => {
+    setCurrentSelectedClass(classes);
+    setShowDeleteModal(true);
   };
   useEffect(() => {
     console.log("The classes here === ", classes);
@@ -47,6 +52,14 @@ export const Classes = () => {
           currentSelectedClass={currentSelectedClass}
         />
       )}
+      {showDeleteModal && currentSelectedClass && (
+        <DeleteClassModal
+          setShowModal={setShowDeleteModal}
+          classId={currentSelectedClass.id}
+          classes={classes}
+          setClasses={setClasses}
+        />
+      )}
       {classes.length > 0 ? (
         <>
           {classes.map((item, i) => (
@@ -59,12 +72,18 @@ export const Classes = () => {
                   {millisecondsToStandardTime(item.schedule[0].endTime)}
                 </span>
               </div>
-              <div className="my-auto flex flex-col pr-4">
+              <div className="my-auto flex pr-4">
                 <Button
-                  className="btn btn-secondary text-sm my-auto"
+                  className="btn btn-secondary text-sm my-auto mr-1"
                   onClick={() => displayEditModal(item)}
                 >
                   <FontAwesomeIcon icon={faPencil} size="sm" />
+                </Button>
+                <Button
+                  className="btn btn-danger text-sm my-auto mr-1"
+                  onClick={() => displayDeleteModal(item)}
+                >
+                  <FontAwesomeIcon icon={faDeleteLeft} size="sm" />
                 </Button>
               </div>
             </CustomListItem>
