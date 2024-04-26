@@ -35,6 +35,7 @@ export interface Classes {
   lecturer: string | null;
   repeat: boolean;
   schedule: Schedule[];
+  Course: Course
 }
 
 export interface Schedule {

@@ -24,3 +24,31 @@ export const millisecondsToTime = (timeInMilliseconds = 0) => {
   const time = `${hour}:${minute}`;
   return time;
 };
+
+export const millisecondsToStandardTime = (timeInMilliseconds = 0) => {
+  const millitaryFormat = millisecondsToTime(timeInMilliseconds);
+  const hour = parseInt(millitaryFormat.split(":")[0]);
+  let newHour = hour.toLocaleString("en-US", {
+    minimumIntegerDigits: 2,
+  });
+  let newMinute = parseInt(millitaryFormat.split(":")[1]).toLocaleString(
+    "en-US",
+    {
+      minimumIntegerDigits: 2,
+    }
+  );
+  let amPm = "";
+  if (hour >= 12) {
+    amPm = "pm";
+
+    newHour =
+      hour > 12
+        ? (hour % 12).toLocaleString("en-US", {
+            minimumIntegerDigits: 2,
+          })
+        : newHour;
+  } else {
+    amPm = "am";
+  }
+  return `${newHour}:${newMinute} ${amPm}`;
+};

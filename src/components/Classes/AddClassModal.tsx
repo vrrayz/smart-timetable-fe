@@ -83,7 +83,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
         endTime: item.endTime || 0,
         startDate,
         endDate: item.endDate || startDate,
-        days: item.days.length > 0 ?  item.days.join(',') : new Date(startDate).toLocaleDateString("en-US", {
+        days: item.days?.length > 0 ?  item.days.join(',') : new Date(startDate).toLocaleDateString("en-US", {
           weekday: "long",
         }),
       };
