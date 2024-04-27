@@ -11,7 +11,7 @@ import {
   updateStudyPreference,
 } from "@/actions/studyPreference";
 import { StudyPreferenceInterface, TimeFieldsInput } from "@/types";
-import { ErrorModal } from "../ErrorModal";
+import { ErrorModal } from "../modals/ErrorModal";
 import { millisecondsToTime, timeToMilliseconds } from "@/helpers";
 
 type StudyPreferenceInput = {

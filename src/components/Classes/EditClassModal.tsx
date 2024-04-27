@@ -11,7 +11,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ErrorModal } from "../ErrorModal";
+import { ErrorModal } from "../modals/ErrorModal";
 import { Label, ErrorMessage, Input, Select } from "../Form";
 import { useCoursesHook } from "@/hooks/useCoursesHook";
 import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
@@ -47,6 +47,7 @@ export const EditClassModal = ({
       ...(currentSelectedClass as unknown as ClassesFormInputs),
       schedule: [
         {
+          days: currentSelectedClass.schedule[0].days.split(','),
           startDate: new Date(currentSelectedClass.schedule[0].startDate)
             .toISOString()
             .split("T")[0],
@@ -89,9 +90,6 @@ export const EditClassModal = ({
     });
   };
 
-  const isChecked = (value: string) =>
-    currentSelectedClass.schedule[0].days.indexOf(value) !== -1;
-
   const onSubmit: SubmitHandler<ClassesFormInputs> = (data) => {
     const actualSchedule = data.schedule.map(({ startDate, ...item }) => {
       return {
@@ -129,6 +127,7 @@ export const EditClassModal = ({
         courses.filter((course) => course.termId === currentTerm.termId)
       );
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTerm]);
 
   useEffect(() => {
@@ -213,7 +212,6 @@ export const EditClassModal = ({
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
-                        checked={isChecked("Sunday")}
                         value={"Sunday"}
                       />
                       <span className="my-auto ml-1 mr-2">S</span>
@@ -224,7 +222,6 @@ export const EditClassModal = ({
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
-                        checked={isChecked("Monday")}
                         value={"Monday"}
                       />
                       <span className="my-auto ml-1 mr-2">M</span>
@@ -235,7 +232,6 @@ export const EditClassModal = ({
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
-                        checked={isChecked("Tuesday")}
                         value={"Tuesday"}
                       />
                       <span className="my-auto ml-1 mr-2">T</span>
@@ -246,7 +242,6 @@ export const EditClassModal = ({
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
-                        checked={isChecked("Wednesday")}
                         value={"Wednesday"}
                       />
                       <span className="my-auto ml-1 mr-2">W</span>
@@ -257,7 +252,6 @@ export const EditClassModal = ({
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
-                        checked={isChecked("Thursday")}
                         value={"Thursday"}
                       />
                       <span className="my-auto ml-1 mr-2">T</span>
@@ -268,7 +262,6 @@ export const EditClassModal = ({
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
-                        checked={isChecked("Friday")}
                         value={"Friday"}
                       />
                       <span className="my-auto ml-1 mr-2">F</span>
@@ -279,7 +272,6 @@ export const EditClassModal = ({
                           required: "Please select at least one day",
                         })}
                         type="checkbox"
-                        checked={isChecked("Saturday")}
                         value={"Saturday"}
                       />
                       <span className="my-auto ml-1 mr-2">S</span>

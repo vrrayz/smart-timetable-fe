@@ -11,7 +11,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ErrorModal } from "../ErrorModal";
+import { ErrorModal } from "../modals/ErrorModal";
 import { Label, ErrorMessage, Input, Select } from "../Form";
 import { useCoursesHook } from "@/hooks/useCoursesHook";
 import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
@@ -104,6 +104,7 @@ export const AddClassModal = ({ setShowModal, classes, setClasses }: Props) => {
         courses.filter((course) => course.termId === currentTerm.termId)
       );
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTerm]);
   return (
     <ModalOverlay onClick={(event) => closeModal(event)} id="modal-overlay">

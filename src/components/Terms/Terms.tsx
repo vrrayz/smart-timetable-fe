@@ -10,7 +10,7 @@ import { AddCourse } from "./AddCourse";
 import { Term } from "@/types";
 import { useCurrentTermsHook } from "./hooks/useCurrentTermHook";
 import { updateCurrentTerm } from "@/actions/terms";
-import { ErrorModal } from "../ErrorModal";
+import { ErrorModal } from "../modals/ErrorModal";
 
 export const Terms = () => {
   const { terms, setTerms } = useTermsHook();

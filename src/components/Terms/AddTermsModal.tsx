@@ -12,7 +12,7 @@ import { ErrorMessage, Input, Label } from "../Form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { addTerm } from "@/actions/terms";
 import { Term } from "@/types";
-import { ErrorModal } from "../ErrorModal";
+import { ErrorModal } from "../modals/ErrorModal";
 
 type TermFormInputs = {
   title: string;

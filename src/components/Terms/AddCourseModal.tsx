@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import { ErrorMessage, Input, Label } from "../Form";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Course, Term } from "@/types";
-import { ErrorModal } from "../ErrorModal";
+import { ErrorModal } from "../modals/ErrorModal";
 import { addCourse } from "@/actions/courses";
 
 type CourseFormInputs = {

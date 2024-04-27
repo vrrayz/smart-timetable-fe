@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, ListItem } from "@/styles";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AddClassModal } from "./AddClassModal";
 import { useClassesHook } from "./hooks/useClassesHook";
 import { millisecondsToStandardTime } from "@/helpers";
@@ -11,12 +11,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDeleteLeft, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { EditClassModal } from "./EditClassModal";
 import { Classes as ClassType } from "@/types";
-import { DeleteClassModal } from "./DeleteClassModal";
+import { DeleteModal } from "../modals/DeleteModal";
+import { deleteClasses } from "@/actions/classes";
+import { ErrorModal } from "../modals/ErrorModal";
 
 export const Classes = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const { classes, setClasses } = useClassesHook();
   const [currentSelectedClass, setCurrentSelectedClass] = useState<ClassType>();
 
@@ -28,6 +31,20 @@ export const Classes = () => {
     setCurrentSelectedClass(classes);
     setShowDeleteModal(true);
   };
+  const performAction = useCallback(() => {
+    if (currentSelectedClass) {
+      deleteClasses({}, currentSelectedClass?.id).then(async (res) => {
+        if (res.statusCode !== 200) setShowErrorModal(true);
+        else {
+          setClasses(
+            classes.filter((item) => item.id !== currentSelectedClass?.id)
+          );
+          setShowDeleteModal(false);
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [classes, currentSelectedClass]);
   useEffect(() => {
     console.log("The classes here === ", classes);
   }, [classes]);
@@ -53,12 +70,14 @@ export const Classes = () => {
         />
       )}
       {showDeleteModal && currentSelectedClass && (
-        <DeleteClassModal
+        <DeleteModal
           setShowModal={setShowDeleteModal}
-          classId={currentSelectedClass.id}
-          classes={classes}
-          setClasses={setClasses}
+          deleteAction={performAction}
+          message="Are you sure you want to delete this class"
         />
+      )}
+      {showErrorModal && (
+        <ErrorModal title={"Error Deleting Term"} setShowModal={setShowModal} />
       )}
       {classes.length > 0 ? (
         <>
