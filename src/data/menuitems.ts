@@ -82,6 +82,7 @@ export const dashboardMenuItems = [
   { title: "Dashboard", isDropdown: false, link: "/dashboard", items: [] },
   { title: "Terms", isDropdown: false, link: "/dashboard/terms", items: [] },
   { title: "Classes", isDropdown: false, link: "/dashboard/classes", items: [] },
+  { title: "Exams", isDropdown: false, link: "/dashboard/exams", items: [] },
   // { title: "Exams", isDropdown: false, link: "/dashboard/exams", items: [] },
   { title: "Study Preference", isDropdown: false, link: "/dashboard/study-preference", items: [] },
   // { title: "Exams", isDropdown: false, link: "/dashboard/exams", items: [] },

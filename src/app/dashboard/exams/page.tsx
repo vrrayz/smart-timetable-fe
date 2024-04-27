@@ -1,8 +1,6 @@
-import { TabBody } from '@/components/Dashboard/TabBody'
-import React from 'react'
+import { Exams } from "@/components/Exams/Exam";
+import React from "react";
 
-export default function Page(){
-  return (
-    <TabBody tabItem={'exams'} />
-  )
+export default function Page() {
+  return <Exams />;
 }

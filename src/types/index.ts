@@ -38,11 +38,24 @@ export interface Classes {
   Course: Course;
 }
 
+export interface Exam {
+  id: number;
+  userId: number;
+  courseId: number;
+  termId: number;
+  room?: string;
+  building?: string;
+  schedule: Schedule[];
+  Course: Course;
+}
+
 export interface Schedule {
   id: number;
   userId: number;
-  termId: number | null;
-  classId: number | null;
+  termId?: number;
+  classId?: number;
+  taskId?: number;
+  examId?: number;
   days: string;
   startDate: Date;
   endDate: Date;
