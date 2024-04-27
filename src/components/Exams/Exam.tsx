@@ -14,13 +14,15 @@ import { DeleteModal } from "../modals/DeleteModal";
 import { deleteExams } from "@/actions/exams";
 import { ErrorModal } from "../modals/ErrorModal";
 import { EditExamModal } from "./EditExamModal";
+import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
 
 export const Exams = () => {
+  const { currentTerm } = useCurrentTermsHook();
+  const { exams, setExams } = useExamHook(currentTerm);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
-  const { exams, setExams } = useExamHook();
   const [currentSelectedExam, setCurrentSelectedExam] = useState<Exam>();
 
   const displayEditModal = (exam: Exam) => {
@@ -36,9 +38,7 @@ export const Exams = () => {
       deleteExams({}, currentSelectedExam?.id).then(async (res) => {
         if (res.statusCode !== 200) setShowErrorModal(true);
         else {
-          setExams(
-            exams.filter((item) => item.id !== currentSelectedExam?.id)
-          );
+          setExams(exams.filter((item) => item.id !== currentSelectedExam?.id));
           setShowDeleteModal(false);
         }
       });
@@ -56,16 +56,18 @@ export const Exams = () => {
           Add New Exam
         </Button>
       </div>
-      {showModal && (
+      {showModal && currentTerm && (
         <AddExamModal
+          currentTerm={currentTerm}
           setShowModal={setShowModal}
           exams={exams}
           setExams={setExams}
         />
       )}
-      {showEditModal && currentSelectedExam && (
+      {showEditModal && currentSelectedExam && currentTerm && (
         <EditExamModal
           setShowModal={setShowEditModal}
+          currentTerm={currentTerm}
           currentSelectedExam={currentSelectedExam}
         />
       )}

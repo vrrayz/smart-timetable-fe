@@ -1,15 +1,15 @@
 import { getClasses } from "@/actions/classes";
-import { Classes } from "@/types";
+import { Classes, CurrentTerm } from "@/types";
 import { useEffect, useState } from "react";
 
-export const useClassesHook = () => {
+export const useClassesHook = (currentTerm?: CurrentTerm) => {
   const [classes, setClasses] = useState<Classes[]>([]);
   useEffect(() => {
     const res = getClasses().then((results) => {
       // console.log("Results are ", results);
-      setClasses(results);
+      if(currentTerm) setClasses(results.filter((result: Classes) => result.termId === currentTerm.termId));
     });
-  }, []);
+  }, [currentTerm]);
 
   return { classes, setClasses }
 };

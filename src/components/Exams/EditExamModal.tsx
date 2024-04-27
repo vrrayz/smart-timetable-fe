@@ -6,7 +6,12 @@ import {
   CloseButton,
   ModalBody,
 } from "@/styles";
-import { Exam, ScheduleInputsWithId, TimeFieldsInput } from "@/types";
+import {
+  CurrentTerm,
+  Exam,
+  ScheduleInputsWithId,
+  TimeFieldsInput,
+} from "@/types";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -14,7 +19,6 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { ErrorModal } from "../modals/ErrorModal";
 import { Label, ErrorMessage, Input, Select } from "../Form";
 import { useCoursesHook } from "@/hooks/useCoursesHook";
-import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
 import { millisecondsToTime, timeToMilliseconds } from "@/helpers";
 import { redirect } from "next/navigation";
 
@@ -29,9 +33,14 @@ type ExamsFormInputs = {
 interface Props {
   setShowModal: (value: boolean) => void;
   currentSelectedExam: Exam;
+  currentTerm: CurrentTerm;
 }
 type FormNames = "startTime" | "endTime";
-export const EditExamModal = ({ setShowModal, currentSelectedExam }: Props) => {
+export const EditExamModal = ({
+  setShowModal,
+  currentSelectedExam,
+  currentTerm,
+}: Props) => {
   const {
     register,
     setValue,
@@ -59,8 +68,7 @@ export const EditExamModal = ({ setShowModal, currentSelectedExam }: Props) => {
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [isFormActionSuccessful, setIsFormActionSuccessful] =
     useState<boolean>(false);
-  const { courses, setCourses } = useCoursesHook();
-  const { currentTerm } = useCurrentTermsHook();
+  const { courses, setCourses } = useCoursesHook(currentTerm);
   const [timeFields, setTimeFields] = useState<TimeFieldsInput>({
     startTime: millisecondsToTime(currentSelectedExam.schedule[0].startTime),
     endTime: millisecondsToTime(currentSelectedExam.schedule[0].endTime),

@@ -14,13 +14,15 @@ import { Classes as ClassType } from "@/types";
 import { DeleteModal } from "../modals/DeleteModal";
 import { deleteClasses } from "@/actions/classes";
 import { ErrorModal } from "../modals/ErrorModal";
+import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
 
 export const Classes = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
-  const { classes, setClasses } = useClassesHook();
+  const { currentTerm } = useCurrentTermsHook();
+  const { classes, setClasses } = useClassesHook(currentTerm);
   const [currentSelectedClass, setCurrentSelectedClass] = useState<ClassType>();
 
   const displayEditModal = (classes: ClassType) => {
@@ -56,17 +58,19 @@ export const Classes = () => {
           Add New Class
         </Button>
       </div>
-      {showModal && (
+      {showModal && currentTerm && (
         <AddClassModal
           setShowModal={setShowModal}
           classes={classes}
           setClasses={setClasses}
+          currentTerm={currentTerm}
         />
       )}
-      {showEditModal && currentSelectedClass && (
+      {showEditModal && currentTerm && currentSelectedClass && (
         <EditClassModal
           setShowModal={setShowEditModal}
           currentSelectedClass={currentSelectedClass}
+          currentTerm={currentTerm}
         />
       )}
       {showDeleteModal && currentSelectedClass && (

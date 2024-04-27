@@ -6,7 +6,12 @@ import {
   CloseButton,
   ModalBody,
 } from "@/styles";
-import { Classes, ScheduleInputsWithId, TimeFieldsInput } from "@/types";
+import {
+  Classes,
+  CurrentTerm,
+  ScheduleInputsWithId,
+  TimeFieldsInput,
+} from "@/types";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -31,11 +36,13 @@ type ClassesFormInputs = {
 interface Props {
   setShowModal: (value: boolean) => void;
   currentSelectedClass: Classes;
+  currentTerm: CurrentTerm;
 }
 type FormNames = "startTime" | "endTime";
 export const EditClassModal = ({
   setShowModal,
   currentSelectedClass,
+  currentTerm,
 }: Props) => {
   const {
     register,
@@ -47,7 +54,7 @@ export const EditClassModal = ({
       ...(currentSelectedClass as unknown as ClassesFormInputs),
       schedule: [
         {
-          days: currentSelectedClass.schedule[0].days.split(','),
+          days: currentSelectedClass.schedule[0].days.split(","),
           startDate: new Date(currentSelectedClass.schedule[0].startDate)
             .toISOString()
             .split("T")[0],
@@ -67,8 +74,7 @@ export const EditClassModal = ({
   );
   const [isFormActionSuccessful, setIsFormActionSuccessful] =
     useState<boolean>(false);
-  const { courses, setCourses } = useCoursesHook();
-  const { currentTerm } = useCurrentTermsHook();
+  const { courses, setCourses } = useCoursesHook(currentTerm);
   const [timeFields, setTimeFields] = useState<TimeFieldsInput>({
     startTime: millisecondsToTime(currentSelectedClass.schedule[0].startTime),
     endTime: millisecondsToTime(currentSelectedClass.schedule[0].endTime),
@@ -127,7 +133,7 @@ export const EditClassModal = ({
         courses.filter((course) => course.termId === currentTerm.termId)
       );
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTerm]);
 
   useEffect(() => {
