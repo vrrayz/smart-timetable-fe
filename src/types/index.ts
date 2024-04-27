@@ -48,7 +48,13 @@ export interface Exam {
   schedule: Schedule[];
   Course: Course;
 }
-
+export interface Task {
+  id: number;
+  userId: number;
+  title: string;
+  detail?: string;
+  schedule: Schedule[];
+}
 export interface Schedule {
   id: number;
   userId: number;

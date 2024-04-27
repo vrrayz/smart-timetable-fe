@@ -1,8 +1,8 @@
-import { TabBody } from '@/components/Dashboard/TabBody'
+import { Tasks } from '@/components/Tasks/Tasks'
 import React from 'react'
 
 export default function Page(){
   return (
-    <TabBody tabItem={'tasks'} />
+    <Tasks />
   )
 }
