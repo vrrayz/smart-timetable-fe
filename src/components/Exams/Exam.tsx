@@ -15,6 +15,7 @@ import { deleteExams } from "@/actions/exams";
 import { ErrorModal } from "../modals/ErrorModal";
 import { EditExamModal } from "./EditExamModal";
 import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
+import { RedirectToCreateTermModal } from "../modals/RedirectToCreateTermModal";
 
 interface Props {
   isFromTabs?: boolean;
@@ -59,6 +60,8 @@ export const Exams = ({ isFromTabs }: Props) => {
   }, [todaysExams]);
   return (
     <>
+      {!currentTerm && <RedirectToCreateTermModal />}
+
       {!isFromTabs && (
         <div className="text-center flex place-content-around mb-4">
           <span className="text-2xl font-bold ">Exams</span>

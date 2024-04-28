@@ -20,7 +20,7 @@ export const NoItem = ({imgName, itemName}:Props) => {
           alt="exam_icon"
           className="mx-auto"
         />
-        <h2>There are no {itemName}</h2>
+        <h2>There are no {itemName} today</h2>
       </NoValueContainer>
     </Container>
   );

@@ -15,6 +15,7 @@ import { DeleteModal } from "../modals/DeleteModal";
 import { deleteClasses } from "@/actions/classes";
 import { ErrorModal } from "../modals/ErrorModal";
 import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
+import { RedirectToCreateTermModal } from "../modals/RedirectToCreateTermModal";
 
 interface Props {
   isFromTabs?: boolean;
@@ -26,7 +27,10 @@ export const Classes = ({ isFromTabs }: Props) => {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const { currentTerm } = useCurrentTermsHook();
-  const { todaysClasses, setTodaysClasses } = useTodaysClassesHook(currentTerm, isFromTabs);
+  const { todaysClasses, setTodaysClasses } = useTodaysClassesHook(
+    currentTerm,
+    isFromTabs
+  );
   const [currentSelectedClass, setCurrentSelectedClass] = useState<ClassType>();
 
   const displayEditModal = (classes: ClassType) => {
@@ -56,6 +60,7 @@ export const Classes = ({ isFromTabs }: Props) => {
   }, [todaysClasses]);
   return (
     <>
+      {!currentTerm && <RedirectToCreateTermModal />}
       {!isFromTabs && (
         <div className="text-center flex place-content-around mb-4">
           <span className="text-2xl font-bold ">Classes</span>
