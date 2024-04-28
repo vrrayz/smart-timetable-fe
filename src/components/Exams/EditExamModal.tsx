@@ -99,12 +99,15 @@ export const EditExamModal = ({
         endTime: item.endTime || 0,
         startDate,
         endDate: startDate,
-        days:
-          item.days?.length > 0
-            ? item.days.join(",")
-            : new Date(startDate).toLocaleDateString("en-US", {
-                weekday: "long",
-              }),
+        days: new Date(startDate).toLocaleDateString("en-US", {
+          weekday: "long",
+        }),
+        // days:
+        //   item.days?.length > 0
+        //     ? item.days.join(",")
+        //     : new Date(startDate).toLocaleDateString("en-US", {
+        //         weekday: "long",
+        //       }),
       };
     });
     const actualFormData = {

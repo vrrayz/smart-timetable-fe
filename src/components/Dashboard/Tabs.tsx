@@ -3,30 +3,46 @@ import styled from "styled-components";
 import Image from "next/image";
 import { Colors, SCREENS } from "@/styles";
 import { TabItem } from "./TabItem";
+import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
+import { useTodaysClassesHook } from "../Classes/hooks/useClassesHook";
+import { useTodaysTasksHook } from "../Tasks/hooks/useTaskHook";
+import { useTodaysExamsHook } from "../Exams/hooks/useExamHook";
 
-export type TabItems = "class" | "tasks" | "exams" | "terms";
+export type TabItems =
+  | "class"
+  | "classes"
+  | "task"
+  | "tasks"
+  | "exam"
+  | "exams"
+  | "terms";
 interface Props {
   setCurrentTab: (value: TabItems) => void;
 }
 export const Tabs = ({ setCurrentTab }: Props) => {
+  const { currentTerm } = useCurrentTermsHook();
+  const { todaysClasses } = useTodaysClassesHook(currentTerm, true);
+  const { todaysExams } = useTodaysExamsHook(currentTerm, true);
+  const { todaysTasks } = useTodaysTasksHook(true);
+
   return (
     <TabsContainer>
       <TabItem
         src="/images/icons/class.png"
-        count={0}
-        title="class"
+        count={todaysClasses.length}
+        title={todaysClasses.length > 1 ? "classes" : "class"}
         setCurrentTab={setCurrentTab}
       />
       <TabItem
         src="/images/icons/tasks.png"
-        count={0}
-        title="tasks"
+        count={todaysTasks.length}
+        title={todaysTasks.length > 1 ? "tasks" : "task"}
         setCurrentTab={setCurrentTab}
       />
       <TabItem
         src="/images/icons/exams.png"
-        count={0}
-        title="exams"
+        count={todaysExams.length}
+        title={todaysExams.length > 1 ? "exams" : "exam"}
         setCurrentTab={setCurrentTab}
       />
     </TabsContainer>

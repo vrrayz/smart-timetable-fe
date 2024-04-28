@@ -13,10 +13,14 @@ import { DeleteModal } from "../modals/DeleteModal";
 import { deleteTasks } from "@/actions/tasks";
 import { ErrorModal } from "../modals/ErrorModal";
 import { EditTaskModal } from "./EditTaskModal";
-import { useTaskHook } from "./hooks/useTaskHook";
+import { useTaskHook, useTodaysTasksHook } from "./hooks/useTaskHook";
 
-export const Tasks = () => {
-  const { tasks, setTasks } = useTaskHook();
+interface Props {
+  isFromTabs?: boolean;
+}
+
+export const Tasks = ({ isFromTabs }: Props) => {
+  const { todaysTasks, setTodaysTasks } = useTodaysTasksHook(isFromTabs);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -36,29 +40,36 @@ export const Tasks = () => {
       deleteTasks({}, currentSelectedTask?.id).then(async (res) => {
         if (res.statusCode !== 200) setShowErrorModal(true);
         else {
-          setTasks(tasks.filter((item) => item.id !== currentSelectedTask?.id));
+          setTodaysTasks(
+            todaysTasks.filter((item) => item.id !== currentSelectedTask?.id)
+          );
           setShowDeleteModal(false);
         }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tasks, currentSelectedTask]);
+  }, [todaysTasks, currentSelectedTask]);
   useEffect(() => {
-    console.log("The tasks here === ", tasks);
-  }, [tasks]);
+    console.log("The tasks here === ", todaysTasks);
+  }, [todaysTasks]);
   return (
     <>
-      <div className="text-center flex place-content-around mb-4">
-        <span className="text-2xl font-bold ">Tasks</span>
-        <Button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          Add New Task
-        </Button>
-      </div>
+      {!isFromTabs && (
+        <div className="text-center flex place-content-around mb-4">
+          <span className="text-2xl font-bold ">Tasks</span>
+          <Button
+            className="btn btn-primary"
+            onClick={() => setShowModal(true)}
+          >
+            Add New Task
+          </Button>
+        </div>
+      )}
       {showModal && (
         <AddTaskModal
           setShowModal={setShowModal}
-          tasks={tasks}
-          setTasks={setTasks}
+          tasks={todaysTasks}
+          setTasks={setTodaysTasks}
         />
       )}
       {showEditModal && currentSelectedTask && (
@@ -77,9 +88,9 @@ export const Tasks = () => {
       {showErrorModal && (
         <ErrorModal title={"Error Deleting Term"} setShowModal={setShowModal} />
       )}
-      {tasks.length > 0 ? (
+      {todaysTasks.length > 0 ? (
         <>
-          {tasks.map((item, i) => (
+          {todaysTasks.map((item, i) => (
             <CustomListItem key={item.id}>
               <div>
                 <h1 className="font-bold">{item.title}</h1>
@@ -90,18 +101,22 @@ export const Tasks = () => {
                 </span>
               </div>
               <div className="my-auto flex pr-4">
-                <Button
-                  className="btn btn-secondary text-sm my-auto mr-1"
-                  onClick={() => displayEditModal(item)}
-                >
-                  <FontAwesomeIcon icon={faPencil} size="sm" />
-                </Button>
-                <Button
-                  className="btn btn-danger text-sm my-auto mr-1"
-                  onClick={() => displayDeleteModal(item)}
-                >
-                  <FontAwesomeIcon icon={faDeleteLeft} size="sm" />
-                </Button>
+                {!isFromTabs && (
+                  <>
+                    <Button
+                      className="btn btn-secondary text-sm my-auto mr-1"
+                      onClick={() => displayEditModal(item)}
+                    >
+                      <FontAwesomeIcon icon={faPencil} size="sm" />
+                    </Button>
+                    <Button
+                      className="btn btn-danger text-sm my-auto mr-1"
+                      onClick={() => displayDeleteModal(item)}
+                    >
+                      <FontAwesomeIcon icon={faDeleteLeft} size="sm" />
+                    </Button>
+                  </>
+                )}
               </div>
             </CustomListItem>
           ))}

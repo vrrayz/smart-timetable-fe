@@ -1,9 +1,11 @@
-'use client'
+"use client";
 
 import React from "react";
 import { TabItems } from "./Tabs";
 import { NoItem } from "../NoItem";
-
+import { Classes } from "../Classes/Classes";
+import { Tasks } from "../Tasks/Tasks";
+import { Exams } from "../Exams/Exam";
 
 interface Props {
   tabItem: TabItems;
@@ -11,7 +13,16 @@ interface Props {
 
 export const TabBody = ({ tabItem }: Props) => {
   return (
-    <NoItem imgName={tabItem} itemName={tabItem} />
+    <>
+      {(tabItem === "class" || tabItem === "classes") && (
+        <Classes isFromTabs={true} />
+      )}
+      {(tabItem === "task" || tabItem === "tasks") && (
+        <Tasks isFromTabs={true} />
+      )}
+      {(tabItem === "exam" || tabItem === "exams") && (
+        <Exams isFromTabs={true} />
+      )}
+    </>
   );
 };
-

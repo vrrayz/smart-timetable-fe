@@ -6,11 +6,7 @@ import {
   CloseButton,
   ModalBody,
 } from "@/styles";
-import {
-  ScheduleInputsWithId,
-  Task,
-  TimeFieldsInput,
-} from "@/types";
+import { ScheduleInputsWithId, Task, TimeFieldsInput } from "@/types";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -31,10 +27,7 @@ interface Props {
   currentSelectedTask: Task;
 }
 type FormNames = "startTime" | "endTime";
-export const EditTaskModal = ({
-  setShowModal,
-  currentSelectedTask,
-}: Props) => {
+export const EditTaskModal = ({ setShowModal, currentSelectedTask }: Props) => {
   const {
     register,
     setValue,
@@ -92,12 +85,15 @@ export const EditTaskModal = ({
         endTime: item.endTime || 0,
         startDate,
         endDate: startDate,
-        days:
-          item.days?.length > 0
-            ? item.days.join(",")
-            : new Date(startDate).toLocaleDateString("en-US", {
-                weekday: "long",
-              }),
+        days: new Date(startDate).toLocaleDateString("en-US", {
+          weekday: "long",
+        }),
+        // days:
+        //   item.days?.length > 0
+        //     ? item.days.join(",")
+        //     : new Date(startDate).toLocaleDateString("en-US", {
+        //         weekday: "long",
+        //       }),
       };
     });
     const actualFormData = {
@@ -105,7 +101,7 @@ export const EditTaskModal = ({
       schedule: actualSchedule,
     };
     editTasks(actualFormData, currentSelectedTask.id).then(async (res) => {
-      console.log('Response is ',res)
+      console.log("Response is ", res);
       if (res.statusCode !== 200) setShowErrorModal(true);
       else {
         setIsFormActionSuccessful(true);
@@ -129,7 +125,7 @@ export const EditTaskModal = ({
           </CloseButton>
           <ModalBody>
             <form onSubmit={handleSubmit(onSubmit)}>
-            <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">Title</Label>
               <Input
                 type="text"
                 {...register("title", { required: "Title is required" })}
@@ -139,10 +135,16 @@ export const EditTaskModal = ({
                 <ErrorMessage>{errors.title.message}</ErrorMessage>
               )}
               <Label htmlFor="detail">Detail</Label>
-              <textarea {...register("detail", { required: 'Detail is required' })} cols={30} rows={3} className="w-full block border border-black"></textarea>
+              <textarea
+                {...register("detail", { required: "Detail is required" })}
+                cols={30}
+                rows={3}
+                className="w-full block border border-black"
+              ></textarea>
               {errors.detail && (
                 <ErrorMessage>{errors.detail.message}</ErrorMessage>
-              )}<Label htmlFor="time">Date</Label>
+              )}
+              <Label htmlFor="time">Date</Label>
               <Input
                 type="date"
                 {...register(`schedule.${0}.startDate`, { required: true })}

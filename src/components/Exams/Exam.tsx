@@ -3,7 +3,7 @@
 import { Button, ListItem } from "@/styles";
 import React, { useCallback, useEffect, useState } from "react";
 import { AddExamModal } from "./AddExamModal";
-import { useExamHook } from "./hooks/useExamHook";
+import { useExamHook, useTodaysExamsHook } from "./hooks/useExamHook";
 import { millisecondsToStandardTime } from "@/helpers";
 import { NoItem } from "../NoItem";
 import styled from "styled-components";
@@ -16,9 +16,16 @@ import { ErrorModal } from "../modals/ErrorModal";
 import { EditExamModal } from "./EditExamModal";
 import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
 
-export const Exams = () => {
+interface Props {
+  isFromTabs?: boolean;
+}
+
+export const Exams = ({ isFromTabs }: Props) => {
   const { currentTerm } = useCurrentTermsHook();
-  const { exams, setExams } = useExamHook(currentTerm);
+  const { todaysExams, setTodaysExams } = useTodaysExamsHook(
+    currentTerm,
+    isFromTabs
+  );
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
@@ -38,30 +45,38 @@ export const Exams = () => {
       deleteExams({}, currentSelectedExam?.id).then(async (res) => {
         if (res.statusCode !== 200) setShowErrorModal(true);
         else {
-          setExams(exams.filter((item) => item.id !== currentSelectedExam?.id));
+          setTodaysExams(
+            todaysExams.filter((item) => item.id !== currentSelectedExam?.id)
+          );
           setShowDeleteModal(false);
         }
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exams, currentSelectedExam]);
+  }, [todaysExams, currentSelectedExam]);
   useEffect(() => {
-    console.log("The exams here === ", exams);
-  }, [exams]);
+    console.log("The exams here === ", todaysExams);
+  }, [todaysExams]);
   return (
     <>
-      <div className="text-center flex place-content-around mb-4">
-        <span className="text-2xl font-bold ">Exams</span>
-        <Button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          Add New Exam
-        </Button>
-      </div>
+      {!isFromTabs && (
+        <div className="text-center flex place-content-around mb-4">
+          <span className="text-2xl font-bold ">Exams</span>
+          <Button
+            className="btn btn-primary"
+            onClick={() => setShowModal(true)}
+          >
+            Add New Exam
+          </Button>
+        </div>
+      )}
+
       {showModal && currentTerm && (
         <AddExamModal
           currentTerm={currentTerm}
           setShowModal={setShowModal}
-          exams={exams}
-          setExams={setExams}
+          exams={todaysExams}
+          setExams={setTodaysExams}
         />
       )}
       {showEditModal && currentSelectedExam && currentTerm && (
@@ -81,9 +96,9 @@ export const Exams = () => {
       {showErrorModal && (
         <ErrorModal title={"Error Deleting Term"} setShowModal={setShowModal} />
       )}
-      {exams.length > 0 ? (
+      {todaysExams.length > 0 ? (
         <>
-          {exams.map((item, i) => (
+          {todaysExams.map((item, i) => (
             <CustomListItem key={item.id}>
               <div>
                 <h1 className="font-bold">{item.Course.title}</h1>
@@ -94,18 +109,22 @@ export const Exams = () => {
                 </span>
               </div>
               <div className="my-auto flex pr-4">
-                <Button
-                  className="btn btn-secondary text-sm my-auto mr-1"
-                  onClick={() => displayEditModal(item)}
-                >
-                  <FontAwesomeIcon icon={faPencil} size="sm" />
-                </Button>
-                <Button
-                  className="btn btn-danger text-sm my-auto mr-1"
-                  onClick={() => displayDeleteModal(item)}
-                >
-                  <FontAwesomeIcon icon={faDeleteLeft} size="sm" />
-                </Button>
+                {!isFromTabs && (
+                  <>
+                    <Button
+                      className="btn btn-secondary text-sm my-auto mr-1"
+                      onClick={() => displayEditModal(item)}
+                    >
+                      <FontAwesomeIcon icon={faPencil} size="sm" />
+                    </Button>
+                    <Button
+                      className="btn btn-danger text-sm my-auto mr-1"
+                      onClick={() => displayDeleteModal(item)}
+                    >
+                      <FontAwesomeIcon icon={faDeleteLeft} size="sm" />
+                    </Button>
+                  </>
+                )}
               </div>
             </CustomListItem>
           ))}
