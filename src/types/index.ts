@@ -38,6 +38,16 @@ export interface Classes {
   Course: Course;
 }
 
+export interface Timetable {
+  id: number;
+  userId: number;
+  courseId: number;
+  termId: number;
+  repeat: boolean;
+  schedule: Schedule[];
+  Course: Course;
+}
+
 export interface Exam {
   id: number;
   userId: number;
@@ -80,3 +90,26 @@ export type TimeFieldsInput = {
   startTime: string;
   endTime: string;
 };
+
+export interface GeneratedTimeTableMap {
+  [key: string]: TimetableItem[];
+}
+export interface GenerateTimetableType {
+  Monday: TimetableItem[];
+  Tuesday: TimetableItem[];
+  Wednesday: TimetableItem[];
+  Thursday: TimetableItem[];
+  Friday: TimetableItem[];
+  Saturday: TimetableItem[];
+  Sunday: TimetableItem[];
+}
+
+export interface TimetableItem {
+  id: number;
+  title: string;
+  courseCode: string;
+  termId: number;
+  userId: number;
+  startTime: number;
+  endTime: number;
+}
