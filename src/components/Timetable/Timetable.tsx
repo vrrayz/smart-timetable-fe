@@ -11,7 +11,11 @@ import {
   useTodaysTimetableHook,
 } from "./hooks/useTimetableHook";
 import { Button, ListItem } from "@/styles";
-import { generateTimetable, saveGeneratedTimetable } from "@/actions/timetable";
+import {
+  deleteTimetable,
+  generateTimetable,
+  saveGeneratedTimetable,
+} from "@/actions/timetable";
 import { ErrorModal } from "../modals/ErrorModal";
 import { GeneratedTimeTableMap, Timetable as TimetableType } from "@/types";
 import { GeneratedTimetableView } from "./GeneratedTimetableView";
@@ -21,6 +25,7 @@ import { millisecondsToStandardTime } from "@/helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDeleteLeft, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { EditTimetableModal } from "./EditTimetableModal";
+import { DeleteModal } from "../modals/DeleteModal";
 
 interface Props {
   isFromTabs?: boolean;
@@ -35,7 +40,7 @@ export const Timetable = ({ isFromTabs }: Props) => {
   const [showGeneratedTimetableModal, setShowGeneratedTimetableModal] =
     useState<boolean>(false);
   const { todaysTimetable, setTodaysTimetable } =
-    useTodaysTimetableHook(currentTerm);
+    useTodaysTimetableHook(currentTerm, isFromTabs);
   const [generatedTimetable, setGeneratedTimetable] =
     useState<GeneratedTimeTableMap>();
   const [isFormActionSuccessful, setIsFormActionSuccessful] =
@@ -43,10 +48,16 @@ export const Timetable = ({ isFromTabs }: Props) => {
 
   const [currentSelectedTimetable, setCurrentSelectedTimetable] =
     useState<TimetableType>();
+
+  const displayDeleteModal = (timetable: TimetableType) => {
+    setCurrentSelectedTimetable(timetable);
+    setShowDeleteModal(true);
+  };
   const displayEditModal = (timetable: TimetableType) => {
     setCurrentSelectedTimetable(timetable);
     setShowEditModal(true);
   };
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const generate = useCallback(() => {
     if (currentTerm) {
@@ -75,6 +86,22 @@ export const Timetable = ({ isFromTabs }: Props) => {
       });
     }
   }, [generatedTimetable, currentTerm]);
+  const performAction = useCallback(() => {
+    if (currentSelectedTimetable) {
+      deleteTimetable({}, currentSelectedTimetable?.id).then(async (res) => {
+        if (res.statusCode !== 200) setShowErrorModal(true);
+        else {
+          setTodaysTimetable(
+            todaysTimetable.filter(
+              (item) => item.id !== currentSelectedTimetable?.id
+            )
+          );
+          setShowDeleteModal(false);
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todaysTimetable, currentSelectedTimetable]);
 
   useEffect(() => {
     if (isFormActionSuccessful) redirect("/dashboard/timetable");
@@ -99,6 +126,13 @@ export const Timetable = ({ isFromTabs }: Props) => {
           setShowModal={setShowEditModal}
           currentSelectedTimetable={currentSelectedTimetable}
           currentTerm={currentTerm}
+        />
+      )}
+      {showDeleteModal && currentSelectedTimetable && (
+        <DeleteModal
+          setShowModal={setShowDeleteModal}
+          deleteAction={performAction}
+          message="Are you sure you want to delete this item from your study timetable"
         />
       )}
       {showErrorModal && (
@@ -144,12 +178,12 @@ export const Timetable = ({ isFromTabs }: Props) => {
                     >
                       <FontAwesomeIcon icon={faPencil} size="sm" />
                     </Button>
-                    {/* <Button
+                    <Button
                       className="btn btn-danger text-sm my-auto mr-1"
                       onClick={() => displayDeleteModal(item)}
                     >
                       <FontAwesomeIcon icon={faDeleteLeft} size="sm" />
-                    </Button> */}
+                    </Button>
                   </>
                 )}
               </div>
