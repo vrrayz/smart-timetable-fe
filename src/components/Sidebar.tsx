@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { SidebarItem } from "./SidebarItem";
 import { dashboardMenuItems, menuItems } from "@/data/menuitems";
 import { GRADIENT_BG } from "@/styles";
+import { logout } from "@/actions";
+import { redirect } from "next/navigation";
 
 interface SidebarProps {
   isNavToggled: boolean;
@@ -10,10 +12,21 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ isNavToggled, isDashboardRoute }: SidebarProps) => {
-  const [sidebarMenuItems, setSidebarMenuItems] = useState(menuItems)
+  const [sidebarMenuItems, setSidebarMenuItems] = useState(menuItems);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+
+  const logoutUser = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    event.preventDefault();
+    logout().then(res => {
+      if (res === "deleted") {
+        setShouldRedirect(true)
+      }
+    })
+  }
   useEffect(() => {
-    if(isDashboardRoute) setSidebarMenuItems(dashboardMenuItems)
-  },[isDashboardRoute])
+    if(isDashboardRoute && shouldRedirect) redirect('/')
+    if (isDashboardRoute) setSidebarMenuItems(dashboardMenuItems);
+  }, [isDashboardRoute, shouldRedirect]);
   return (
     <SidebarContainer
       className={`${isNavToggled && "transformed"}`}
@@ -28,6 +41,11 @@ export const Sidebar = ({ isNavToggled, isDashboardRoute }: SidebarProps) => {
                 <a href={menuItem.link}>{menuItem.title}</a>
               </SidebarItem>
             ))}
+            {isDashboardRoute && (
+              <SidebarItem>
+                <a href={'#'} onClick={(event) => logoutUser(event)}>Logout</a>
+              </SidebarItem>
+            )}
           </ul>
         </div>
         <div></div>

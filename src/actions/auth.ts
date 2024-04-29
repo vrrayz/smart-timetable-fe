@@ -37,4 +37,10 @@ export const registerUser = async (data = {}) => {
   };
 };
 
+export const logout = async () => {
+  cookies().delete("access_token")
+
+  return "deleted"
+}
+
 
