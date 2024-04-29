@@ -18,29 +18,29 @@ export const useTimetableHook = (currentTerm?: CurrentTerm) => {
   return { timetable, setTimetable };
 };
 
-// export const useTodaysTimetableHook = (
-//   currentTerm?: CurrentTerm,
-//   isFromTabs?: boolean
-// ) => {
-//   const { timetable } = useClassesHook(currentTerm);
-//   const [todaysClasses, setTodaysClasses] = useState<Classes[]>([]);
+export const useTodaysTimetableHook = (
+  currentTerm?: CurrentTerm,
+  isFromTabs?: boolean
+) => {
+  const { timetable } = useTimetableHook(currentTerm);
+  const [todaysTimetable, setTodaysTimetable] = useState<Timetable[]>([]);
 
-//   useEffect(() => {
-//     if (isFromTabs) {
-//       const date = new Date().toLocaleDateString("en-US", {
-//         weekday: "long",
-//       });
-//       setTodaysClasses(
-//         timetable
-//           .filter((item) => {
-//             return item.schedule[0].days.indexOf(date) >= 0;
-//           })
-//           .map((item) => {
-//             return { ...item, schedule: [{ ...item.schedule[0], days: date }] };
-//           })
-//       );
-//     } else setTodaysClasses(timetable);
-//   }, [timetable, currentTerm, isFromTabs]);
+  useEffect(() => {
+    if (isFromTabs) {
+      const date = new Date().toLocaleDateString("en-US", {
+        weekday: "long",
+      });
+      setTodaysTimetable(
+        timetable
+          .filter((item) => {
+            return item.schedule[0].days.indexOf(date) >= 0;
+          })
+          .map((item) => {
+            return { ...item, schedule: [{ ...item.schedule[0], days: date }] };
+          })
+      );
+    } else setTodaysTimetable(timetable);
+  }, [timetable, currentTerm, isFromTabs]);
 
-//   return { todaysClasses, setTodaysClasses };
-// };
+  return { todaysTimetable, setTodaysTimetable };
+};

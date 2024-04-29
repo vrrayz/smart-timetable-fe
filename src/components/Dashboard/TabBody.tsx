@@ -6,6 +6,7 @@ import { NoItem } from "../NoItem";
 import { Classes } from "../Classes/Classes";
 import { Tasks } from "../Tasks/Tasks";
 import { Exams } from "../Exams/Exam";
+import { Timetable } from "../Timetable/Timetable";
 
 interface Props {
   tabItem: TabItems;
@@ -22,6 +23,9 @@ export const TabBody = ({ tabItem }: Props) => {
       )}
       {(tabItem === "exam" || tabItem === "exams") && (
         <Exams isFromTabs={true} />
+      )}
+      {(tabItem === "timetable") && (
+        <Timetable isFromTabs={true} />
       )}
     </>
   );

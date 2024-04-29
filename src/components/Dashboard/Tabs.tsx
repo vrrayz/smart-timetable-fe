@@ -7,6 +7,7 @@ import { useCurrentTermsHook } from "../Terms/hooks/useCurrentTermHook";
 import { useTodaysClassesHook } from "../Classes/hooks/useClassesHook";
 import { useTodaysTasksHook } from "../Tasks/hooks/useTaskHook";
 import { useTodaysExamsHook } from "../Exams/hooks/useExamHook";
+import { useTodaysTimetableHook } from "../Timetable/hooks/useTimetableHook";
 
 export type TabItems =
   | "class"
@@ -15,7 +16,8 @@ export type TabItems =
   | "tasks"
   | "exam"
   | "exams"
-  | "terms";
+  | "terms"
+  | "timetable";
 interface Props {
   setCurrentTab: (value: TabItems) => void;
 }
@@ -24,6 +26,7 @@ export const Tabs = ({ setCurrentTab }: Props) => {
   const { todaysClasses } = useTodaysClassesHook(currentTerm, true);
   const { todaysExams } = useTodaysExamsHook(currentTerm, true);
   const { todaysTasks } = useTodaysTasksHook(true);
+  const { todaysTimetable } = useTodaysTimetableHook(currentTerm, true)
 
   return (
     <TabsContainer>
@@ -45,6 +48,12 @@ export const Tabs = ({ setCurrentTab }: Props) => {
         title={todaysExams.length > 1 ? "exams" : "exam"}
         setCurrentTab={setCurrentTab}
       />
+      <TabItem
+        src="/images/icons/tasks.png"
+        count={todaysTimetable.length}
+        title={"timetable"}
+        setCurrentTab={setCurrentTab}
+      />
     </TabsContainer>
   );
 };
@@ -52,7 +61,7 @@ export const Tabs = ({ setCurrentTab }: Props) => {
 const TabsContainer = styled.div`
   padding: 0px 8px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   font-size: 0.85rem;
   ${SCREENS.lg} {
     display: grid;

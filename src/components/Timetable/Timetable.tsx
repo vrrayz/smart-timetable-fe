@@ -6,7 +6,10 @@ import { RedirectToCreateTermModal } from "../modals/RedirectToCreateTermModal";
 import { useCoursesHook } from "@/hooks/useCoursesHook";
 import { useStudyPrefernceHook } from "../StudyPreference/hooks/useStudyPreference";
 import { RedirectToPreferenceModal } from "../modals/RedirectToPreferenceModal";
-import { useTimetableHook } from "./hooks/useTimetableHook";
+import {
+  useTimetableHook,
+  useTodaysTimetableHook,
+} from "./hooks/useTimetableHook";
 import { Button, ListItem } from "@/styles";
 import { generateTimetable, saveGeneratedTimetable } from "@/actions/timetable";
 import { ErrorModal } from "../modals/ErrorModal";
@@ -16,14 +19,19 @@ import { redirect } from "next/navigation";
 import styled from "styled-components";
 import { millisecondsToStandardTime } from "@/helpers";
 
-export const Timetable = () => {
+interface Props {
+  isFromTabs?: boolean;
+}
+
+export const Timetable = ({ isFromTabs }: Props) => {
   const { currentTerm } = useCurrentTermsHook();
   const { courses } = useCoursesHook(currentTerm);
   const { studyPreference } = useStudyPrefernceHook();
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
   const [showGeneratedTimetableModal, setShowGeneratedTimetableModal] =
     useState<boolean>(false);
-  const { timetable, setTimetable } = useTimetableHook(currentTerm);
+  const { todaysTimetable, setTodaysTimetable } =
+    useTodaysTimetableHook(currentTerm);
   const [generatedTimetable, setGeneratedTimetable] =
     useState<GeneratedTimeTableMap>();
   const [isFormActionSuccessful, setIsFormActionSuccessful] =
@@ -66,18 +74,22 @@ export const Timetable = () => {
 
   return (
     <>
-      {!currentTerm && <RedirectToCreateTermModal />}
-      {courses.length === 0 && (
-        <RedirectToCreateTermModal message="You haven't added any course to your current term" />
+      {!isFromTabs && (
+        <>
+          {!currentTerm && <RedirectToCreateTermModal />}
+          {courses.length === 0 && (
+            <RedirectToCreateTermModal message="You haven't added any course to your current term" />
+          )}
+          {!studyPreference && <RedirectToPreferenceModal />}
+        </>
       )}
-      {!studyPreference && <RedirectToPreferenceModal />}
       {showErrorModal && (
         <ErrorModal
           title={"Timetable Error"}
           setShowModal={setShowErrorModal}
         />
       )}
-      {timetable.length === 0 && (
+      {todaysTimetable.length === 0 && !isFromTabs && (
         <div className="text-center flex place-content-around mb-4">
           <span className="text-2xl font-bold "></span>
           <Button className="btn btn-primary" onClick={() => generate()}>
@@ -93,9 +105,9 @@ export const Timetable = () => {
           )}
         </div>
       )}
-      {timetable.length > 0 && (
+      {todaysTimetable.length > 0 && (
         <>
-          {timetable.map((item, i) => (
+          {todaysTimetable.map((item, i) => (
             <CustomListItem key={i}>
               <div>
                 <h1 className="font-bold">{item.Course.title}</h1>
