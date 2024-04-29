@@ -44,9 +44,9 @@ export const addTimetable = async (data = {}) => {
   };
 };
 
-export const editTimetable = async (data = {}, classId: number) => {
+export const editTimetable = async (data = {}, timetableId: number) => {
   const request = await postData(
-    "/timetable/edit/" + classId,
+    "/timetable/edit/" + timetableId,
     data,
     "PATCH",
     "application/json"
@@ -57,8 +57,8 @@ export const editTimetable = async (data = {}, classId: number) => {
   };
 };
 
-export const deleteTimetable = async (data = {}, classId: number) => {
-  const request = await deleteData("/timetable/delete/" + classId);
+export const deleteTimetable = async (data = {}, timetableId: number) => {
+  const request = await deleteData("/timetable/delete/" + timetableId);
   return {
     statusCode: request.statusCode,
     message: request.message,

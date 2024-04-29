@@ -58,6 +58,7 @@ export const StudyPreference = () => {
         if (res.statusCode !== 200) setShowErrorModal(true);
         else {
           setStudyPreference(res.message as StudyPreferenceInterface);
+          alert("Study Prefrence Updated!")
         }
       });
     } else {
@@ -65,6 +66,7 @@ export const StudyPreference = () => {
         if (res.statusCode !== 200) setShowErrorModal(true);
         else {
           setStudyPreference(res.message as StudyPreferenceInterface);
+          alert("Study Prefrence Updated!")
         }
       });
     }

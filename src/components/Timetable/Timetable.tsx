@@ -13,11 +13,14 @@ import {
 import { Button, ListItem } from "@/styles";
 import { generateTimetable, saveGeneratedTimetable } from "@/actions/timetable";
 import { ErrorModal } from "../modals/ErrorModal";
-import { GeneratedTimeTableMap } from "@/types";
+import { GeneratedTimeTableMap, Timetable as TimetableType } from "@/types";
 import { GeneratedTimetableView } from "./GeneratedTimetableView";
 import { redirect } from "next/navigation";
 import styled from "styled-components";
 import { millisecondsToStandardTime } from "@/helpers";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDeleteLeft, faPencil } from "@fortawesome/free-solid-svg-icons";
+import { EditTimetableModal } from "./EditTimetableModal";
 
 interface Props {
   isFromTabs?: boolean;
@@ -28,6 +31,7 @@ export const Timetable = ({ isFromTabs }: Props) => {
   const { courses } = useCoursesHook(currentTerm);
   const { studyPreference } = useStudyPrefernceHook();
   const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
   const [showGeneratedTimetableModal, setShowGeneratedTimetableModal] =
     useState<boolean>(false);
   const { todaysTimetable, setTodaysTimetable } =
@@ -36,6 +40,13 @@ export const Timetable = ({ isFromTabs }: Props) => {
     useState<GeneratedTimeTableMap>();
   const [isFormActionSuccessful, setIsFormActionSuccessful] =
     useState<boolean>(false);
+
+  const [currentSelectedTimetable, setCurrentSelectedTimetable] =
+    useState<TimetableType>();
+  const displayEditModal = (timetable: TimetableType) => {
+    setCurrentSelectedTimetable(timetable);
+    setShowEditModal(true);
+  };
 
   const generate = useCallback(() => {
     if (currentTerm) {
@@ -83,6 +94,13 @@ export const Timetable = ({ isFromTabs }: Props) => {
           {!studyPreference && <RedirectToPreferenceModal />}
         </>
       )}
+      {showEditModal && currentTerm && currentSelectedTimetable && (
+        <EditTimetableModal
+          setShowModal={setShowEditModal}
+          currentSelectedTimetable={currentSelectedTimetable}
+          currentTerm={currentTerm}
+        />
+      )}
       {showErrorModal && (
         <ErrorModal
           title={"Timetable Error"}
@@ -117,7 +135,24 @@ export const Timetable = ({ isFromTabs }: Props) => {
                   {millisecondsToStandardTime(item.schedule[0].endTime)}
                 </span>
               </div>
-              <div className="my-auto flex pr-4"></div>
+              <div className="my-auto flex pr-4">
+                {!isFromTabs && (
+                  <>
+                    <Button
+                      className="btn btn-secondary text-sm my-auto mr-1"
+                      onClick={() => displayEditModal(item)}
+                    >
+                      <FontAwesomeIcon icon={faPencil} size="sm" />
+                    </Button>
+                    {/* <Button
+                      className="btn btn-danger text-sm my-auto mr-1"
+                      onClick={() => displayDeleteModal(item)}
+                    >
+                      <FontAwesomeIcon icon={faDeleteLeft} size="sm" />
+                    </Button> */}
+                  </>
+                )}
+              </div>
             </CustomListItem>
           ))}
         </>
